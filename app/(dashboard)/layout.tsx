@@ -16,15 +16,24 @@ export default function DashboardLayout({
   useEffect(() => {
     setUnreadCount(notificationsService.getUnreadCount());
     const handler = () => setUnreadCount(notificationsService.getUnreadCount());
-    window.addEventListener("mibarra-notifications-update", handler);
-    return () => window.removeEventListener("mibarra-notifications-update", handler);
+    window.addEventListener("barra-notifications-update", handler);
+    return () => window.removeEventListener("barra-notifications-update", handler);
   }, []);
 
   return (
     <AuthGuard>
-      <div className="h-screen bg-apple-bg flex flex-col overflow-hidden">
+      <div
+        className="bg-apple-bg flex flex-col overflow-hidden w-full max-w-[100vw]"
+        style={{
+          height: "100dvh",
+          minHeight: "100dvh",
+          maxHeight: "100dvh",
+          paddingTop: "env(safe-area-inset-top)",
+          paddingBottom: "env(safe-area-inset-bottom)",
+        }}
+      >
         <DashboardHeader notificationsCount={unreadCount} />
-        <main className="flex-1 min-h-0 overflow-hidden">
+        <main className="flex-1 min-h-0 overflow-hidden flex flex-col">
           {children}
         </main>
         <DashboardFooter />

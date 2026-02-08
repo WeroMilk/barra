@@ -52,7 +52,7 @@ export default function BottleCard({ bottle, isSelected, onClick }: BottleCardPr
     <button
       type="button"
       onClick={onClick}
-      className={`relative w-full min-w-0 h-full min-h-0 max-h-full rounded-xl border-2 transition-colors duration-200 overflow-hidden flex flex-col shrink-0 ${
+      className={`relative w-full min-w-0 h-full min-h-0 max-h-full rounded-lg min-[380px]:rounded-xl border-2 transition-colors duration-200 overflow-hidden flex flex-col shrink-0 ${
         isSelected
           ? "border-apple-accent bg-apple-accent/5 shadow-md"
           : "border-apple-border bg-apple-surface hover:border-apple-accent"
@@ -60,17 +60,17 @@ export default function BottleCard({ bottle, isSelected, onClick }: BottleCardPr
       style={{ aspectRatio: "unset" }}
     >
       {isSelected && (
-        <div className="absolute top-1.5 right-1.5 z-10">
-          <div className="w-5 h-5 bg-apple-accent rounded-full flex items-center justify-center shadow">
-            <Check className="w-3 h-3 text-white" />
+        <div className="absolute top-1 right-1 min-[380px]:top-1.5 min-[380px]:right-1.5 z-10">
+          <div className="w-4 h-4 min-[380px]:w-5 min-[380px]:h-5 bg-apple-accent rounded-full flex items-center justify-center shadow">
+            <Check className="w-2.5 h-2.5 min-[380px]:w-3 min-[380px]:h-3 text-white" />
           </div>
         </div>
       )}
 
-      <div className="p-1.5 min-[380px]:p-2 flex flex-col items-center flex-1 min-h-0 min-w-0 overflow-hidden w-full">
-        <div className="w-full min-w-0 flex-shrink-0 text-center h-[2.5rem] min-[380px]:h-[2.75rem] sm:h-[2.85rem] flex flex-col justify-start overflow-hidden">
+      <div className="p-1 min-[380px]:p-1.5 sm:p-2 flex flex-col items-center flex-1 min-h-0 min-w-0 overflow-hidden w-full">
+        <div className="w-full min-w-0 flex-shrink-0 text-center h-[1.75rem] min-[380px]:h-[2rem] sm:h-[2.25rem] flex flex-col justify-center overflow-hidden">
           <h3
-            className={`font-semibold text-[11px] min-[380px]:text-xs sm:text-sm leading-tight line-clamp-2 text-apple-text overflow-hidden text-ellipsis break-words ${
+            className={`font-semibold text-[10px] min-[380px]:text-[11px] sm:text-xs leading-tight line-clamp-2 text-apple-text overflow-hidden text-ellipsis break-words ${
               isSelected ? "!text-apple-accent" : ""
             }`}
             title={bottle.name}
@@ -79,7 +79,7 @@ export default function BottleCard({ bottle, isSelected, onClick }: BottleCardPr
           </h3>
         </div>
 
-        <div className="w-full flex-shrink-0 h-10 min-[380px]:h-11 sm:h-12 flex items-center justify-center max-h-10 min-[380px]:max-h-11 sm:max-h-12 mt-0.5">
+        <div className="w-full flex-shrink-0 h-7 min-[380px]:h-8 sm:h-9 md:h-10 flex items-center justify-center max-h-7 min-[380px]:max-h-8 sm:max-h-9 md:max-h-10 mt-0.5 min-[380px]:mt-1">
           {bottle.image ? (
             <Image
               src={bottle.image}
@@ -95,7 +95,7 @@ export default function BottleCard({ bottle, isSelected, onClick }: BottleCardPr
           )}
         </div>
 
-        <p className="text-[10px] min-[380px]:text-[11px] text-apple-text2 flex-shrink-0 mt-0.5">
+        <p className="text-[9px] min-[380px]:text-[10px] text-apple-text2 flex-shrink-0 mt-0.5 leading-none">
           {bottle.size} ml
         </p>
       </div>

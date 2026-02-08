@@ -35,8 +35,6 @@ export default function BarPage() {
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
   const [displayBottles, setDisplayBottles] = useState<Bottle[]>([]);
   const thumbnailScrollRef = useRef<HTMLDivElement>(null);
-  const touchStartX = useRef<number>(0);
-  const touchEndX = useRef<number>(0);
   const dragStartIndex = useRef<number | null>(null);
 
   useEffect(() => {
@@ -108,13 +106,7 @@ export default function BarPage() {
 
   const scrollToIndex = useCallback((index: number) => setActiveIndex(index), []);
 
-  const handleTouchStart = useCallback((e: React.TouchEvent) => { touchStartX.current = e.touches[0]?.clientX ?? 0; }, []);
-  const handleTouchMove = useCallback((e: React.TouchEvent) => { touchEndX.current = e.touches[0]?.clientX ?? 0; }, []);
-  const handleTouchEnd = useCallback(() => {
-    const distance = (touchStartX.current ?? 0) - (touchEndX.current ?? 0);
-    if (distance > 50 && activeIndex < displayBottles.length - 1) scrollToIndex(activeIndex + 1);
-    else if (distance < -50 && activeIndex > 0) scrollToIndex(activeIndex - 1);
-  }, [activeIndex, displayBottles.length, scrollToIndex]);
+  // Cambio de bebida solo desde el scroll de miniaturas abajo (no swipe en el centro)
 
   const getSortLabel = (opt: SortOption) => {
     switch (opt) {
@@ -216,12 +208,7 @@ export default function BarPage() {
         </div>
       </div>
 
-      <div
-        className="flex-1 overflow-hidden min-h-0"
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
+      <div className="flex-1 overflow-hidden min-h-0 overflow-y-auto">
         <AnimatePresence mode="wait">
           {displayBottles.length === 0 ? (
             <motion.div

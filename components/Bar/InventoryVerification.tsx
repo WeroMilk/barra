@@ -131,14 +131,14 @@ export default function InventoryVerification({
         </button>
       </div>
 
-      {/* Modal de contraseña */}
+      {/* Modal de contraseña (responsive: móvil e iPhone, no se corta) */}
       <AnimatePresence>
         {showPasswordModal && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+            className="modal-overlay"
             onClick={() => {
               setShowPasswordModal(false);
               setPassword("");
@@ -150,7 +150,7 @@ export default function InventoryVerification({
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-apple-surface rounded-2xl p-6 max-w-sm w-full shadow-2xl"
+              className="modal-box bg-apple-surface rounded-2xl p-4 sm:p-6 w-full shadow-2xl flex-shrink-0"
             >
               <h3 className="text-lg font-semibold text-apple-text mb-2">
                 Contraseña de Gerente
@@ -200,14 +200,14 @@ export default function InventoryVerification({
         )}
       </AnimatePresence>
 
-      {/* Modal de edición */}
+      {/* Modal de edición (responsive: móvil e iPhone) */}
       <AnimatePresence>
         {showEditModal && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+            className="modal-overlay"
             onClick={() => {
               setShowEditModal(false);
               setNewValue(unit === "units" ? String(Math.round(displayValue)) : displayValue.toFixed(1));
@@ -219,7 +219,7 @@ export default function InventoryVerification({
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-apple-surface rounded-2xl p-6 max-w-sm w-full shadow-2xl"
+              className="modal-box bg-apple-surface rounded-2xl p-4 sm:p-6 w-full shadow-2xl flex-shrink-0"
             >
               <h3 className="text-lg font-semibold text-apple-text mb-2">
                 Editar Disponibilidad

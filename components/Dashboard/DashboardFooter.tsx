@@ -9,8 +9,8 @@ export default function DashboardFooter() {
   useEffect(() => {
     const update = () => setLastUpdate(getLastInventoryUpdate());
     update();
-    window.addEventListener("mibarra-inventory-update-changed", update);
-    return () => window.removeEventListener("mibarra-inventory-update-changed", update);
+    window.addEventListener("barra-inventory-update-changed", update);
+    return () => window.removeEventListener("barra-inventory-update-changed", update);
   }, []);
 
   return (

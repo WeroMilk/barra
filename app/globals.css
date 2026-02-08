@@ -104,3 +104,29 @@ textarea {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* Modal responsive: visible en móvil e iPhone (safe-area, no cortado) */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  padding-top: max(1rem, env(safe-area-inset-top));
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  padding-left: max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.modal-box {
+  width: 100%;
+  max-width: 28rem;
+  max-height: min(85dvh, calc(100dvh - 2rem));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: auto;
+}

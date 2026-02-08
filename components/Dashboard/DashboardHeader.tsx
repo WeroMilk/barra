@@ -28,7 +28,7 @@ export default function DashboardHeader({ leftContent, notificationsCount = 0 }:
       <div className="flex items-center h-full relative min-h-[40px] sm:min-h-0">
         <div className="flex-1 flex items-center justify-center min-w-0">
           <div className="text-center truncate">
-            <h1 className="text-sm sm:text-base md:text-lg font-semibold text-apple-text leading-tight">MiBarra</h1>
+            <h1 className="text-sm sm:text-base md:text-lg font-semibold text-apple-text leading-tight">Barra</h1>
             <p className="text-[9px] sm:text-[10px] text-apple-text2 leading-tight truncate max-w-[120px] sm:max-w-none mx-auto">
               {demoAuth.getCurrentUser()?.barName || "Mi Bar"}
             </p>

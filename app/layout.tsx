@@ -25,7 +25,7 @@ export const viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "MiBarra - Gestión de Bar",
+  title: "Barra - Gestión de Bar",
   description: "Control de inventario de botellas y cervezas",
 };
 
