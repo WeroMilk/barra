@@ -24,8 +24,8 @@ export default function DashboardHeader({ leftContent, notificationsCount = 0 }:
     }`;
 
   return (
-    <div className="bg-apple-surface border-b border-apple-border px-2 py-1.5 sm:px-3 sm:py-2 flex-shrink-0 z-20">
-      <div className="flex items-center h-full relative min-h-[40px] sm:min-h-0">
+    <div className="bg-apple-surface border-b border-apple-border px-2 py-1.5 sm:px-3 sm:py-2 flex-shrink-0 z-20 safe-area-x">
+      <div className="flex items-center h-full relative min-h-[44px] sm:min-h-0">
         <div className="flex-1 flex items-center justify-center min-w-0">
           <div className="text-center truncate">
             <h1 className="text-sm sm:text-base md:text-lg font-semibold text-apple-text leading-tight">Barra</h1>
@@ -36,22 +36,22 @@ export default function DashboardHeader({ leftContent, notificationsCount = 0 }:
         </div>
         <div className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center gap-0.5 sm:gap-1">
           {leftContent}
-          <Link href="/bar" className={`p-1 sm:p-1.5 rounded-md ${linkClass("/bar")}`} title="Inventario" aria-label="Inventario">
-            <Wine className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          <Link href="/bar" className={`touch-target-min flex items-center justify-center min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 p-1.5 sm:p-1.5 rounded-md ${linkClass("/bar")}`} title="Inventario" aria-label="Inventario">
+            <Wine className="w-4 h-4 sm:w-4 sm:h-4 flex-shrink-0" />
           </Link>
-          <Link href="/movements" className={`relative p-1 sm:p-1.5 rounded-md ${linkClass("/movements")}`} title="Movimientos" aria-label="Movimientos">
-            <Bell className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          <Link href="/movements" className={`touch-target-min relative flex items-center justify-center min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 p-1.5 sm:p-1.5 rounded-md ${linkClass("/movements")}`} title="Movimientos" aria-label="Movimientos">
+            <Bell className="w-4 h-4 sm:w-4 sm:h-4 flex-shrink-0" />
             {notificationsCount > 0 && (
               <span className="absolute -top-0.5 -right-0.5 min-w-[14px] h-[14px] sm:min-w-[18px] sm:h-[18px] px-0.5 flex items-center justify-center text-[8px] sm:text-[10px] font-bold text-white bg-red-500 rounded-full">
                 {notificationsCount > 99 ? "99+" : notificationsCount}
               </span>
             )}
           </Link>
-          <Link href="/import-sales" className={`p-1 sm:p-1.5 rounded-md ${linkClass("/import-sales")}`} title="Importar ventas" aria-label="Importar ventas">
-            <FileSpreadsheet className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          <Link href="/import-sales" className={`touch-target-min flex items-center justify-center min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 p-1.5 rounded-md ${linkClass("/import-sales")}`} title="Importar ventas" aria-label="Importar ventas">
+            <FileSpreadsheet className="w-4 h-4 flex-shrink-0" />
           </Link>
-          <Link href="/config" className={`p-1 sm:p-1.5 rounded-md ${linkClass("/config")}`} title="Configuraciones" aria-label="Configuraciones">
-            <Settings className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          <Link href="/config" className={`touch-target-min flex items-center justify-center min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 p-1.5 rounded-md ${linkClass("/config")}`} title="Configuraciones" aria-label="Configuraciones">
+            <Settings className="w-4 h-4 flex-shrink-0" />
           </Link>
         </div>
         <div className="absolute right-0 top-1/2 -translate-y-1/2">

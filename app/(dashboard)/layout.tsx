@@ -23,13 +23,13 @@ export default function DashboardLayout({
   return (
     <AuthGuard>
       <div
-        className="bg-apple-bg flex flex-col overflow-hidden w-full max-w-[100vw]"
+        className="bg-apple-bg flex flex-col overflow-hidden w-full max-w-[100vw] safe-area-x"
         style={{
-          height: "100dvh",
+          height: "var(--app-height, 100dvh)",
           minHeight: "100dvh",
           maxHeight: "100dvh",
-          paddingTop: "env(safe-area-inset-top)",
-          paddingBottom: "env(safe-area-inset-bottom)",
+          paddingTop: "env(safe-area-inset-top, 0px)",
+          paddingBottom: "env(safe-area-inset-bottom, 0px)",
         }}
       >
         <DashboardHeader notificationsCount={unreadCount} />

@@ -37,9 +37,12 @@ export default function SetBarNamePage() {
 
   return (
     <AuthGuard>
-      <div className="min-h-screen bg-apple-bg p-4 flex items-center justify-center">
+      <div
+        className="min-h-[100dvh] min-h-screen bg-apple-bg p-4 flex items-center justify-center safe-area-x"
+        style={{ paddingTop: "env(safe-area-inset-top, 0px)", paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
+      >
         <div className="max-w-md w-full">
-          <div className="bg-apple-surface rounded-3xl shadow-xl border border-apple-border p-8 relative">
+          <div className="bg-apple-surface rounded-3xl shadow-xl border border-apple-border p-6 sm:p-8 relative">
             <div className="absolute top-4 right-4">
               <LogoutButton showText={false} />
             </div>
@@ -49,7 +52,7 @@ export default function SetBarNamePage() {
                 Nombre de tu bar
               </h1>
               <p className="text-apple-text2 text-sm">
-                Este nombre se mostrará siempre debajo del título &quot;MiBarra&quot; en la barra.
+                Este nombre se mostrará siempre debajo del título &quot;Barra&quot; en la barra.
               </p>
             </div>
 

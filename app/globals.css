@@ -7,6 +7,9 @@
   --apple-surface: #FFFFFF;
   --apple-text: #1D1D1F;
   --apple-accent: #007AFF;
+  /* Altura de app en móvil: igual en iOS y Android (iPhone 14 Pro Max = cualquier Android) */
+  --app-height: 100dvh;
+  --app-height-fallback: 100vh;
 }
 
 * {
@@ -16,10 +19,11 @@
 }
 
 html {
-  /* Altura estable en móvil (evita salto con barra de direcciones) */
   min-height: 100vh;
   min-height: 100dvh;
   height: 100%;
+  /* Evita rebote/scroll extra en Android e iOS */
+  overscroll-behavior: none;
 }
 
 html,
@@ -33,10 +37,19 @@ body {
   min-height: 100dvh;
   width: 100vw;
   height: 100%;
+  overscroll-behavior: none;
 }
 
-/* Pantalla del bar: una sola vista tipo app, sin scroll */
+/* En Android sin soporte dvh (muy antiguo) usar 100vh */
+@supports not (height: 100dvh) {
+  :root {
+    --app-height: 100vh;
+  }
+}
+
+/* Pantalla tipo app: misma altura en iPhone y Android */
 .app-bar-view {
+  height: var(--app-height);
   height: 100dvh;
   max-height: 100dvh;
   overflow: hidden;
@@ -46,7 +59,16 @@ body {
 
 #__next {
   min-height: 100vh;
+  min-height: 100dvh;
   width: 100vw;
+}
+
+/* Área táctil mínima 44px en móvil (accesibilidad iOS/Android) */
+@media (pointer: coarse) {
+  .touch-target-min {
+    min-width: 44px;
+    min-height: 44px;
+  }
 }
 
 body {
@@ -129,4 +151,22 @@ textarea {
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   margin: auto;
+}
+
+/* Safe-area para Android (0) e iOS (notch/home): mismo padding lógico */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.safe-area-left {
+  padding-left: env(safe-area-inset-left, 0px);
+}
+.safe-area-right {
+  padding-right: env(safe-area-inset-right, 0px);
+}
+.safe-area-x {
+  padding-left: env(safe-area-inset-left, 0px);
+  padding-right: env(safe-area-inset-right, 0px);
 }

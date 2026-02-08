@@ -155,7 +155,7 @@ export default function EditableUnitField({
                   id={`editable-unit-value-${label.replace(/\s+/g, "-")}`}
                   name="editValue"
                   type="number"
-                  step={isPercentage ? 1 : 1}
+                  step={isPercentage ? 1 : 0.1}
                   min={0}
                   max={isPercentage ? 100 : undefined}
                   value={inputValue}

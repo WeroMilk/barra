@@ -162,6 +162,52 @@ export default function BottleDisplay({ bottle, onBottleUpdate }: BottleDisplayP
     });
   };
 
+  // Licores: editar capacidad total (oz), usadas (oz) o disponible (%)
+  const handleEditCapacityOz = (newCapacityOz: number, employeeLabel: string) => {
+    const newSizeMl = Math.max(0, newCapacityOz / ML_TO_OZ);
+    const ratio = bottle.size > 0 ? bottle.currentOz / bottle.size : 1;
+    const newCurrentOz = newSizeMl * ratio;
+    const updatedBottle: Bottle = { ...bottle, size: newSizeMl, currentOz: newCurrentOz };
+    movementsService.add({
+      bottleId: bottle.id,
+      bottleName: bottle.name,
+      type: "edit",
+      oldValue: sizeOz,
+      newValue: newCapacityOz,
+      userName: employeeLabel,
+    });
+    onBottleUpdate?.(updatedBottle);
+  };
+
+  const handleEditUsedOz = (newUsedOz: number, employeeLabel: string) => {
+    const newRemainingOz = Math.max(0, sizeOz - newUsedOz);
+    const newCurrentOzMl = newRemainingOz / ML_TO_OZ;
+    const updatedBottle: Bottle = { ...bottle, currentOz: newCurrentOzMl };
+    movementsService.add({
+      bottleId: bottle.id,
+      bottleName: bottle.name,
+      type: "edit",
+      oldValue: used,
+      newValue: newUsedOz,
+      userName: employeeLabel,
+    });
+    onBottleUpdate?.(updatedBottle);
+  };
+
+  const handleEditPercentageOz = (newPct: number, employeeLabel: string) => {
+    const newCurrentOzMl = bottle.size * (Math.min(100, Math.max(0, newPct)) / 100);
+    const updatedBottle: Bottle = { ...bottle, currentOz: newCurrentOzMl };
+    movementsService.add({
+      bottleId: bottle.id,
+      bottleName: bottle.name,
+      type: "edit",
+      oldValue: Math.round(percentage),
+      newValue: Math.round(newPct),
+      userName: employeeLabel,
+    });
+    onBottleUpdate?.(updatedBottle);
+  };
+
   const handlePortionChange = (portion: number, employeeLabel?: string) => {
     if (employeeLabel) {
       movementsService.add({
@@ -336,18 +382,9 @@ export default function BottleDisplay({ bottle, onBottleUpdate }: BottleDisplayP
           </div>
         ) : (
           <div className="grid grid-cols-3 gap-1 sm:gap-2">
-            <div className="bg-apple-surface rounded-md sm:rounded-lg p-1 sm:p-2 border border-apple-border">
-              <p className="text-[9px] sm:text-[10px] text-apple-text2 mb-0">Capacidad Total</p>
-              <p className="text-[10px] sm:text-sm font-semibold text-apple-text">{sizeDisplay.toFixed(1)} {unitLabel}</p>
-            </div>
-            <div className="bg-apple-surface rounded-md sm:rounded-lg p-1 sm:p-2 border border-apple-border">
-              <p className="text-[9px] sm:text-[10px] text-apple-text2 mb-0">Usadas</p>
-              <p className="text-[10px] sm:text-sm font-semibold text-apple-text">{used.toFixed(1)} {unitLabel}</p>
-            </div>
-            <div className="bg-apple-surface rounded-md sm:rounded-lg p-1 sm:p-2 border border-apple-border">
-              <p className="text-[9px] sm:text-[10px] text-apple-text2 mb-0">Disponible</p>
-              <p className={`text-[10px] sm:text-sm font-semibold ${getPercentageTextColor()}`}>{percentage.toFixed(0)}%</p>
-            </div>
+            <EditableUnitField label="Capacidad Total" value={sizeOz.toFixed(1)} unit={unitLabel} onEdit={handleEditCapacityOz} />
+            <EditableUnitField label="Usadas" value={used.toFixed(1)} unit={unitLabel} onEdit={handleEditUsedOz} />
+            <EditableUnitField label="Disponible" value={Math.round(percentage)} unit="%" isPercentage onEdit={handleEditPercentageOz} valueClassName={getPercentageTextColor()} />
           </div>
         )}
       </div>

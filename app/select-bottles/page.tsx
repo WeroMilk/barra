@@ -102,12 +102,13 @@ export default function SelectBottlesPage() {
 
   return (
     <AuthGuard>
-      {/* Contenedor flex: altura fija, sin scroll de página. Solo el área de boxes hace scroll. */}
+      {/* Misma altura que dashboard: 100dvh en iOS y Android (como iPhone 14 Pro Max) */}
       <div
-        className="h-[100dvh] min-h-screen bg-apple-bg overflow-hidden flex flex-col"
+        className="bg-apple-bg overflow-hidden flex flex-col safe-area-x"
         style={{
-          paddingLeft: "env(safe-area-inset-left, 0px)",
-          paddingRight: "env(safe-area-inset-right, 0px)",
+          height: "var(--app-height, 100dvh)",
+          minHeight: "100dvh",
+          maxHeight: "100dvh",
         }}
       >
         {/* 1. Header compacto en móvil para evitar scroll */}

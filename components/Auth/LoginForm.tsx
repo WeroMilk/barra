@@ -44,11 +44,14 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-apple-bg">
+    <div
+      className="min-h-[100dvh] min-h-screen flex items-center justify-center p-4 bg-apple-bg safe-area-x"
+      style={{ paddingTop: "env(safe-area-inset-top, 0px)", paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
+    >
       <div className="w-full max-w-md">
-        <div className="bg-apple-surface rounded-3xl shadow-xl border border-apple-border p-8">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-semibold text-apple-text mb-2">MiBarra</h1>
+        <div className="bg-apple-surface rounded-3xl shadow-xl border border-apple-border p-6 sm:p-8">
+          <div className="text-center mb-6 sm:mb-8">
+            <h1 className="text-3xl sm:text-4xl font-semibold text-apple-text mb-2">Barra</h1>
             <p className="text-apple-text2">Gestión Profesional de Bar</p>
           </div>
 
