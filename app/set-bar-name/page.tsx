@@ -62,7 +62,7 @@ export default function SetBarNamePage() {
                 Nombre de tu bar
               </h1>
               <p className="text-apple-text2 text-sm">
-                Este nombre se mostrará siempre debajo del título &quot;Barra&quot; en la barra.
+                Este nombre se mostrará siempre debajo del título &quot;MiBarra&quot; en la barra.
               </p>
             </div>
 
