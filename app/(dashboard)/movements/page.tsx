@@ -6,12 +6,12 @@ import { motion } from "framer-motion";
 import { Check, X, Edit, Settings, ChevronLeft, ChevronRight, Package, Type, Calendar, FileSpreadsheet, ArrowLeftRight, ClipboardCheck } from "lucide-react";
 import { isBeerBottleId } from "@/lib/measurementRules";
 
-/** Items por página: móvil +1, desktop -1 para mejor lectura. */
+/** Items por página (2 más que antes en cada breakpoint si caben). */
 function getItemsPerPage(width: number) {
-  if (width < 400) return 3;
-  if (width < 768) return 4;
-  if (width < 1024) return 5;
-  return 6;
+  if (width < 400) return 5;
+  if (width < 768) return 6;
+  if (width < 1024) return 7;
+  return 8;
 }
 
 export default function MovementsPage() {

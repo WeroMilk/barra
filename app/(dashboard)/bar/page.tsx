@@ -227,7 +227,7 @@ export default function BarPage() {
     <div className="h-full flex flex-col overflow-hidden">
       {/* Selector de categoría (mismo padding que resto del dashboard) */}
       <div className="flex-shrink-0 px-4 pt-1.5 pb-1.5 bg-apple-surface border-b border-apple-border">
-        <div className="w-full min-w-0 max-w-3xl mx-auto flex gap-1.5 overflow-x-auto scrollbar-hide pb-0.5">
+        <div className="w-full min-w-0 max-w-3xl sm:max-w-4xl md:max-w-5xl lg:max-w-6xl xl:max-w-7xl mx-auto flex gap-1.5 overflow-x-auto scrollbar-hide pb-0.5">
           <button
             type="button"
             onClick={() => setSelectedCategory("todos")}
@@ -257,7 +257,7 @@ export default function BarPage() {
       </div>
 
       <div className="flex-1 min-h-0 min-w-0 overflow-y-auto overflow-x-hidden">
-        <div className="w-full min-w-0 h-full max-w-3xl mx-auto px-4">
+        <div className="w-full min-w-0 h-full max-w-3xl sm:max-w-4xl md:max-w-5xl lg:max-w-6xl xl:max-w-7xl mx-auto px-4">
           <AnimatePresence mode="wait">
             {displayBottles.length === 0 ? (
               <motion.div
@@ -300,7 +300,7 @@ export default function BarPage() {
 
       {displayBottles.length > 0 && (
         <div className="bg-apple-surface border-t border-apple-border px-4 py-2 flex-shrink-0">
-          <div className="w-full min-w-0 max-w-3xl mx-auto">
+          <div className="w-full min-w-0 max-w-3xl sm:max-w-4xl md:max-w-5xl lg:max-w-6xl xl:max-w-7xl mx-auto">
             <div className="flex items-center justify-between mb-1 sm:mb-2 px-0.5 gap-1 sm:gap-2">
               <span className="text-[9px] sm:text-[10px] text-apple-text2 truncate">{getSortLabel(sortOption)}</span>
               <button

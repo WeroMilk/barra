@@ -279,20 +279,10 @@ export default function BottleDisplay({
 
   return (
     <div className="flex flex-col h-full min-h-0 overflow-hidden">
-      {/* Información superior - mismo en todos los dispositivos */}
-      <div className="text-center px-2 pt-5 pb-1 flex-shrink-0">
-        <h1 className="text-sm min-[400px]:text-base sm:text-lg md:text-xl font-semibold text-apple-text leading-tight truncate px-1">
-          {bottle.name}
-        </h1>
-        <span className="inline-block text-[9px] min-[400px]:text-[10px] sm:text-xs text-apple-text2 bg-apple-surface px-1.5 py-0.5 rounded-full border border-apple-border mt-0.5">
-          {bottle.category.toUpperCase()}
-        </span>
-      </div>
-
-      {/* Misma disposición siempre: [ Verificar | Botella | Porción ] */}
-      <div className="flex-1 flex items-stretch justify-center gap-1 sm:gap-2 md:gap-4 px-1 sm:px-2 py-0.5 min-h-0 min-w-0 overflow-hidden">
-        <div className="flex-shrink-0 flex flex-col items-center gap-1.5 sm:gap-2 min-w-0">
-          {/* Botón Inventario: inicia conteo; durante inventario muestra progreso */}
+      {/* [ Izquierda: Inventario/Verificar | Centro: Título + Botella (siempre centrados) | Derecha: Porción ] */}
+      <div className="flex-1 flex items-center justify-center gap-2 sm:gap-3 md:gap-6 px-2 sm:px-3 py-2 min-h-0 min-w-0 overflow-hidden">
+        {/* Izquierda: a la misma altura que la botella */}
+        <div className="flex-shrink-0 flex flex-col items-center justify-center gap-1.5 sm:gap-2 min-w-0">
           {onStartInventory != null && inventoryTotal > 0 && (
             inventoryActive ? (
               <div className="text-center min-h-[28px] flex flex-col justify-center">
@@ -321,13 +311,22 @@ export default function BottleDisplay({
           />
         </div>
 
+        {/* Centro: título + botella siempre en el mismo eje, centrados en todas las vistas */}
         <motion.div
           initial={{ scale: 0.98, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.25 }}
-          className="flex-1 min-w-0 h-full flex flex-col items-center justify-center min-h-0"
+          className="flex-1 min-w-0 flex flex-col items-center justify-center min-h-0"
         >
-          <div className="relative flex flex-col items-center justify-center min-h-[160px] sm:min-h-[180px]">
+          <div className="text-center flex flex-col items-center w-full px-1 pb-2 sm:pb-3 flex-shrink-0">
+            <h1 className="text-sm min-[400px]:text-base sm:text-lg md:text-xl font-semibold text-apple-text leading-tight truncate max-w-full">
+              {bottle.name}
+            </h1>
+            <span className="inline-block text-[9px] min-[400px]:text-[10px] sm:text-xs text-apple-text2 bg-apple-surface px-1.5 py-0.5 rounded-full border border-apple-border mt-0.5">
+              {bottle.category.toUpperCase()}
+            </span>
+          </div>
+          <div className="relative flex flex-col items-center justify-center min-h-[140px] min-[400px]:min-h-[160px] sm:min-h-[180px] flex-shrink-0">
             <svg
               viewBox="0 0 40 64"
               className="w-auto h-[140px] min-[400px]:h-[160px] sm:h-[180px] md:h-[200px] drop-shadow-xl flex-shrink-0"

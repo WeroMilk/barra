@@ -5,22 +5,23 @@
 
 const PORTION_KEY = (category: string) => `portion-${category}`;
 
+/** Por defecto todas las categorías usan 1 oz (o 1 unid para cerveza/unidades). */
 const DEFAULT_PORTIONS: Record<string, number> = {
   vodka: 1,
-  tequila: 1.5,
-  whiskey: 2,
-  whisky: 2,
-  ron: 1.5,
+  tequila: 1,
+  whiskey: 1,
+  whisky: 1,
+  ron: 1,
   gin: 1,
   ginebra: 1,
   cerveza: 1,
-  mezcal: 1.5,
-  vino: 5,
-  champagne: 5,
-  brandy: 2,
+  mezcal: 1,
+  vino: 1,
+  champagne: 1,
+  brandy: 1,
   licores: 1,
-  pisco: 1.5,
-  sidra: 5,
+  pisco: 1,
+  sidra: 1,
 };
 
 export function getPortionForCategory(category: string): number {
