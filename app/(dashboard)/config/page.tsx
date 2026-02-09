@@ -120,8 +120,8 @@ export default function ConfigPage() {
 
       <div className="flex-1 min-h-0 overflow-hidden flex flex-col px-2 sm:px-4 py-2 sm:py-3">
         <div className="flex-1 min-h-0 min-w-0 flex flex-col md:flex-row gap-2 sm:gap-3 max-w-5xl mx-auto w-full">
-          {/* Contraseña de empleado - prioridad de espacio */}
-          <section className="flex flex-col min-h-0 min-w-0 flex-[3] md:min-w-[320px] bg-apple-surface rounded-xl sm:rounded-2xl border border-apple-border shadow-sm overflow-hidden">
+          {/* Contraseña de empleado - más alto en móvil, prioridad en desktop */}
+          <section className="flex flex-col min-h-0 min-w-0 flex-[4] md:flex-[3] md:min-w-[320px] bg-apple-surface rounded-xl sm:rounded-2xl border border-apple-border shadow-sm overflow-hidden">
             <div className="flex-shrink-0 px-3 sm:px-4 py-2 sm:py-3 border-b border-apple-border/60 flex items-center gap-2">
               <div className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-apple-accent/10">
                 <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-apple-accent" aria-hidden />
@@ -176,10 +176,10 @@ export default function ConfigPage() {
             </div>
           </section>
 
-          {/* Generar pedido - compacto */}
-          <section className="flex flex-col min-h-0 min-w-0 flex-1 md:flex-[0.5] md:max-w-[180px] bg-apple-surface rounded-xl sm:rounded-2xl border border-apple-border shadow-sm overflow-hidden flex-shrink-0 md:flex-shrink">
-            <div className="flex-shrink-0 px-3 sm:px-4 py-2 sm:py-3 border-b border-apple-border/60 flex items-center gap-2">
-              <div className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-apple-accent/10">
+          {/* Generar pedido - poco espacio en móvil; en desktop ancho para botón en una línea */}
+          <section className="flex flex-col min-h-0 min-w-0 flex-[0.7] md:flex-[0.5] md:min-w-[220px] md:max-w-[260px] md:items-start bg-apple-surface rounded-xl sm:rounded-2xl border border-apple-border shadow-sm overflow-hidden flex-shrink-0 md:flex-shrink">
+            <div className="flex-shrink-0 px-3 sm:px-4 py-2 sm:py-3 border-b border-apple-border/60 flex items-center gap-2 w-full">
+              <div className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-apple-accent/10 shrink-0">
                 <ShoppingCart className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-apple-accent" aria-hidden />
               </div>
               <div className="min-w-0">
@@ -187,11 +187,11 @@ export default function ConfigPage() {
                 <p className="text-[10px] sm:text-xs text-apple-text2 truncate">Faltantes y bajo 25%. WhatsApp.</p>
               </div>
             </div>
-            <div className="flex-1 flex items-center justify-center p-3 sm:p-6 min-h-[80px]">
+            <div className="flex-1 md:flex-initial w-full flex items-center justify-center p-3 sm:p-4 min-h-[72px] md:min-h-0 md:py-4">
               <button
                 type="button"
                 onClick={handleGenerateOrder}
-                className="inline-flex items-center justify-center gap-1.5 w-full max-w-[200px] px-3 py-2.5 sm:py-3 bg-apple-accent text-white text-xs sm:text-sm font-medium rounded-xl hover:opacity-90"
+                className="inline-flex items-center justify-center gap-1.5 w-full min-w-0 px-3 py-2.5 sm:py-3 bg-apple-accent text-white text-xs sm:text-sm font-medium rounded-xl hover:opacity-90 whitespace-nowrap"
               >
                 <ShoppingCart className="w-3.5 h-3.5 shrink-0" />
                 Generar pedido
@@ -199,10 +199,10 @@ export default function ConfigPage() {
             </div>
           </section>
 
-          {/* Mi inventario - compacto */}
-          <section className="flex flex-col min-h-0 min-w-0 flex-1 md:flex-[0.5] md:max-w-[180px] bg-apple-surface rounded-xl sm:rounded-2xl border border-apple-border shadow-sm overflow-hidden flex-shrink-0 md:flex-shrink">
-            <div className="flex-shrink-0 px-3 sm:px-4 py-2 sm:py-3 border-b border-apple-border/60 flex items-center gap-2">
-              <div className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-apple-accent/10">
+          {/* Mi inventario - poco espacio en móvil; en desktop ancho para botón en una línea */}
+          <section className="flex flex-col min-h-0 min-w-0 flex-[0.7] md:flex-[0.5] md:min-w-[220px] md:max-w-[260px] md:items-start bg-apple-surface rounded-xl sm:rounded-2xl border border-apple-border shadow-sm overflow-hidden flex-shrink-0 md:flex-shrink">
+            <div className="flex-shrink-0 px-3 sm:px-4 py-2 sm:py-3 border-b border-apple-border/60 flex items-center gap-2 w-full">
+              <div className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-apple-accent/10 shrink-0">
                 <Package className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-apple-accent" aria-hidden />
               </div>
               <div className="min-w-0">
@@ -210,10 +210,10 @@ export default function ConfigPage() {
                 <p className="text-[10px] sm:text-xs text-apple-text2 truncate">Añade o quita botellas.</p>
               </div>
             </div>
-            <div className="flex-1 flex items-center justify-center p-3 sm:p-6 min-h-[80px]">
+            <div className="flex-1 md:flex-initial w-full flex items-center justify-center p-3 sm:p-4 min-h-[72px] md:min-h-0 md:py-4">
               <Link
                 href="/select-bottles"
-                className="inline-flex items-center justify-center gap-1.5 w-full max-w-[200px] px-3 py-2.5 sm:py-3 bg-apple-accent text-white text-xs sm:text-sm font-medium rounded-xl hover:opacity-90"
+                className="inline-flex items-center justify-center gap-1.5 w-full min-w-0 px-3 py-2.5 sm:py-3 bg-apple-accent text-white text-xs sm:text-sm font-medium rounded-xl hover:opacity-90 whitespace-nowrap"
               >
                 <Package className="w-3.5 h-3.5 shrink-0" />
                 Selecciona tu inventario

@@ -1,14 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
   <rect width="32" height="32" rx="8" fill="#000000"/>
-  <!-- Vaso naranja: copa + tallo + base -->
+  <!-- Copa de vino naranja -->
   <g fill="#E67E22">
-    <!-- Copa (bowl del vaso) -->
-    <path d="M8 10h16l-1.5 10c0 .55-.45 1-1 1h-11c-.55 0-1-.45-1-1L8 10z"/>
+    <!-- Copa (cáliz): trapecio invertido -->
+    <path d="M10 5h12l-2 12H12L10 5z"/>
     <!-- Tallo -->
-    <path d="M14.5 21h3v4h-3z"/>
+    <path d="M14.5 17h3v5h-3z"/>
     <!-- Base -->
-    <path d="M13 25h6v1.5c0 .3-.2.5-.5.5h-5c-.3 0-.5-.2-.5-.5V25z"/>
+    <path d="M12 22h8v2c0 .5-.4 1-1 1h-6c-.6 0-1-.5-1-1v-2z"/>
   </g>
-  <!-- Brillo sutil en la copa -->
-  <path d="M10 11h2v8h-2z" fill="#fff" fill-opacity="0.25"/>
+  <!-- Brillo -->
+  <path d="M12 7h1.5v8H12z" fill="#fff" fill-opacity="0.25"/>
 </svg>
