@@ -45,11 +45,21 @@ export default function LoginForm() {
 
   return (
     <div
-      className="min-h-[100dvh] min-h-screen flex items-center justify-center p-4 bg-apple-bg safe-area-x"
+      className="relative min-h-[100dvh] min-h-screen flex items-center justify-center p-4 bg-apple-bg safe-area-x overflow-hidden"
       style={{ paddingTop: "env(safe-area-inset-top, 0px)", paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
     >
-      <div className="w-full max-w-md">
-        <div className="bg-apple-surface rounded-3xl shadow-xl border border-apple-border p-6 sm:p-8">
+      {/* Sombras naranjas con blur que se mueven por el fondo */}
+      <div className="absolute inset-0 pointer-events-none" aria-hidden>
+        <div className="login-orb-1 absolute w-[min(80vw,320px)] h-[min(80vw,320px)] rounded-full bg-[#E67E22] opacity-20 blur-[80px] -left-[10%] top-[5%]" />
+        <div className="login-orb-2 absolute w-[min(60vw,260px)] h-[min(60vw,260px)] rounded-full bg-[#E67E22] opacity-25 blur-[70px] right-[0%] top-[30%]" />
+        <div className="login-orb-3 absolute w-[min(70vw,280px)] h-[min(70vw,280px)] rounded-full bg-[#D35400] opacity-[0.15] blur-[90px] left-[20%] bottom-[10%]" />
+        <div className="login-orb-4 absolute w-[min(50vw,220px)] h-[min(50vw,220px)] rounded-full bg-[#E67E22] opacity-20 blur-[60px] right-[15%] bottom-[25%]" />
+        <div className="login-orb-5 absolute w-[min(55vw,240px)] h-[min(55vw,240px)] rounded-full bg-[#EB984E] opacity-[0.18] blur-[75px] left-[5%] top-[40%]" />
+        <div className="login-orb-6 absolute w-[min(65vw,270px)] h-[min(65vw,270px)] rounded-full bg-[#D35400] opacity-[0.12] blur-[85px] right-[25%] top-[10%]" />
+      </div>
+
+      <div className="relative z-10 w-full max-w-md">
+        <div className="bg-apple-surface/95 backdrop-blur-sm rounded-3xl shadow-xl border border-apple-border p-6 sm:p-8">
           <div className="text-center mb-6 sm:mb-8">
             <h1 className="text-3xl sm:text-4xl font-semibold text-apple-accent mb-2">MiBarra</h1>
             <p className="text-apple-text2">Gestión Profesional de Bar</p>

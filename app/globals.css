@@ -170,3 +170,26 @@ textarea {
   padding-left: env(safe-area-inset-left, 0px);
   padding-right: env(safe-area-inset-right, 0px);
 }
+
+/* Sombras naranjas animadas en login */
+@keyframes login-float-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(15%, -10%) scale(1.05); }
+  50% { transform: translate(-10%, 15%) scale(0.95); }
+  75% { transform: translate(-5%, -5%) scale(1.02); }
+}
+@keyframes login-float-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-20%, 10%) scale(1.1); }
+  66% { transform: translate(10%, -15%) scale(0.9); }
+}
+@keyframes login-float-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(12%, 12%) scale(1.08); }
+}
+.login-orb-1 { animation: login-float-1 18s ease-in-out infinite; }
+.login-orb-2 { animation: login-float-2 22s ease-in-out infinite; }
+.login-orb-3 { animation: login-float-3 20s ease-in-out infinite; }
+.login-orb-4 { animation: login-float-2 25s ease-in-out infinite reverse; }
+.login-orb-5 { animation: login-float-3 16s ease-in-out infinite 2s; }
+.login-orb-6 { animation: login-float-1 24s ease-in-out infinite 1s reverse; }
