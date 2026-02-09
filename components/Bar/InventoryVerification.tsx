@@ -70,8 +70,7 @@ export default function InventoryVerification({
         setCurrentEmployeeLabel(employee.label);
         onReportIncorrect?.(employee.label);
         setShowEditModal(true);
-        if (unit === "units") setNewValue(String(Math.round(displayValue)));
-        else setNewValue(displayValue.toFixed(1));
+        setNewValue("");
       }
       setPendingAction(null);
     } else {
@@ -210,7 +209,7 @@ export default function InventoryVerification({
             className="modal-overlay"
             onClick={() => {
               setShowEditModal(false);
-              setNewValue(unit === "units" ? String(Math.round(displayValue)) : displayValue.toFixed(1));
+              setNewValue("");
               setError("");
             }}
           >
@@ -257,7 +256,7 @@ export default function InventoryVerification({
                     type="button"
                     onClick={() => {
                       setShowEditModal(false);
-                      setNewValue(unit === "units" ? Math.round(displayValue).toString() : displayValue.toString());
+                      setNewValue("");
                       setError("");
                     }}
                     className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-colors"

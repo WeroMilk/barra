@@ -45,7 +45,7 @@ export default function EditableUnitField({
       setCurrentEmployeeLabel(employee.label);
       setShowPassword(false);
       setShowEdit(true);
-      setInputValue(String(value));
+      setInputValue("");
       setError("");
     } else {
       setError("Contraseña incorrecta");
