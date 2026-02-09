@@ -13,10 +13,10 @@ import LogoutButton from "@/components/Auth/LogoutButton";
 import BottleCard from "@/components/SelectBottles/BottleCard";
 import { motion } from "framer-motion";
 
-/** Móvil muy pequeño: 6 | Móvil: 12 | Tablet: 10 | Desktop: 10 */
+/** Móvil muy pequeño: 6 | Móvil: 10 | Tablet: 10 | Desktop: 10 */
 function getItemsPerPage(width: number) {
   if (width < 400) return 6;
-  if (width < 768) return 12; // móvil: 12 por pantalla (2 cols × 6 filas)
+  if (width < 768) return 10; // móvil: 10 por pantalla (2 cols × 5 filas)
   if (width < 1024) return 10; // tablet
   return 10; // desktop: 10 (5 cols × 2 filas)
 }

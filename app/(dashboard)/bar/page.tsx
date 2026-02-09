@@ -5,6 +5,7 @@ import BottleDisplay from "@/components/Bar/BottleDisplay";
 import BottleThumbnail from "@/components/Bar/BottleThumbnail";
 import { categories } from "@/lib/bottlesData";
 import { loadBarBottles } from "@/lib/barStorage";
+import { getLastInventoryUpdate } from "@/lib/inventoryUpdate";
 import { Bottle } from "@/lib/types";
 import { movementsService, notificationsService } from "@/lib/movements";
 import { demoAuth } from "@/lib/demoAuth";
@@ -42,6 +43,14 @@ export default function BarPage() {
   const [inventoryActive, setInventoryActive] = useState(false);
   const [inventoryReviewedIds, setInventoryReviewedIds] = useState<Set<string>>(new Set());
   const inventoryCompletedRef = useRef(false);
+  const [lastInventory, setLastInventory] = useState("");
+
+  useEffect(() => {
+    const update = () => setLastInventory(getLastInventoryUpdate());
+    update();
+    window.addEventListener("mibarra-inventory-update-changed", update);
+    return () => window.removeEventListener("mibarra-inventory-update-changed", update);
+  }, []);
 
   useEffect(() => {
     const savedOrder = localStorage.getItem("bottles-custom-order");
@@ -254,6 +263,11 @@ export default function BarPage() {
             </button>
           ))}
         </div>
+      </div>
+
+      {/* Móvil: último inventario centrado debajo de las categorías */}
+      <div className="flex-shrink-0 md:hidden py-1.5 px-4 text-center">
+        <span className="text-[10px] text-apple-text2">Último inventario: {lastInventory}</span>
       </div>
 
       <div className="flex-1 min-h-0 min-w-0 overflow-y-auto overflow-x-hidden">

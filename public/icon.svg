@@ -1,6 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
   <rect width="32" height="32" rx="8" fill="#1D1D1F"/>
-  <!-- Coctelera (shaker de bartender): silueta reconocible -->
-  <path d="M16 3.5l1.2-1.2 1.2 1.2v2.5h-2.4V3.5zM13 7h6v2h-1.2l-.5 8H22v2H10v-2h4.7l-.5-8H13V7zm-2.2 10H8v6c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-6h-2.8l-.4 6h-8.4l-.4-6z" fill="#E67E22"/>
-  <path d="M12.5 9h1v8h-1V9zm6 0h1v7h-1V9z" fill="#fff" fill-opacity="0.25"/>
+  <!-- Coctelera de bartender: tapa cónica + cuerpo ancho abajo -->
+  <g fill="#E67E22">
+    <!-- Tapa (cúpula pequeña arriba) -->
+    <path d="M16 2.5c.5 0 1 .25 1.3.65l.5.85v1.5h-3.6V3.95l.5-.85c.3-.4.8-.65 1.3-.65z"/>
+    <!-- Cuello -->
+    <path d="M14 5.5h4v1.8h-.8l-.3 7.2h2.6v3.5c0 1.1-.9 2-2 2h-4c-1.1 0-2-.9-2-2v-3.5h2.6l-.3-7.2H14V5.5z"/>
+    <!-- Cuerpo del shaker (base ancha) -->
+    <path d="M12 18.5h8v4c0 .6-.4 1-1 1h-6c-.6 0-1-.4-1-1v-4z"/>
+  </g>
+  <!-- Brillo sutil -->
+  <path d="M14.5 7h1v6h-1V7zm5 0h1v5.5h-1V7z" fill="#fff" fill-opacity="0.2"/>
 </svg>

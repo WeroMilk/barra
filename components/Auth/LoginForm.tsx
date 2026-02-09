@@ -45,7 +45,7 @@ export default function LoginForm() {
 
   return (
     <div
-      className="relative min-h-[100dvh] min-h-screen flex items-center justify-center p-4 bg-apple-bg safe-area-x overflow-hidden"
+      className="relative min-h-[100dvh] min-h-screen flex items-center justify-center px-5 py-4 sm:p-4 bg-apple-bg safe-area-x overflow-hidden"
       style={{ paddingTop: "env(safe-area-inset-top, 0px)", paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
     >
       {/* Sombras naranjas con blur que se mueven por el fondo */}
@@ -58,7 +58,7 @@ export default function LoginForm() {
         <div className="login-orb-6 absolute w-[min(65vw,270px)] h-[min(65vw,270px)] rounded-full bg-[#D35400] opacity-[0.12] blur-[85px] right-[25%] top-[10%]" />
       </div>
 
-      <div className="relative z-10 w-full max-w-md">
+      <div className="relative z-10 w-full max-w-md min-w-0">
         <div className="bg-apple-surface/95 backdrop-blur-sm rounded-3xl shadow-xl border border-apple-border p-6 sm:p-8">
           <div className="text-center mb-6 sm:mb-8">
             <h1 className="text-3xl sm:text-4xl font-semibold text-apple-accent mb-2">MiBarra</h1>

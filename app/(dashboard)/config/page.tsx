@@ -118,23 +118,23 @@ export default function ConfigPage() {
         <p className="text-xs text-apple-text2">Ajustes del bar y contraseñas de empleados.</p>
       </div>
 
-      <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-3 gap-3 p-4 pt-2 overflow-hidden">
-        {/* Contraseña de empleado */}
-        <section className="flex flex-col min-h-0 bg-apple-surface rounded-2xl border border-apple-border overflow-hidden flex-1">
-          <div className="flex-shrink-0 p-3 border-b border-apple-border/50">
+      <div className="flex-1 min-h-0 overflow-hidden flex flex-col lg:flex-row items-stretch justify-center p-3 lg:p-4 pt-1 gap-2 lg:gap-4 max-w-5xl mx-auto w-full">
+        {/* Contraseña de empleado: en móvil compacto para no hacer scroll */}
+        <section className="flex flex-col min-h-0 lg:flex-1 bg-apple-surface rounded-2xl border border-apple-border overflow-hidden flex-shrink-0 lg:min-w-0">
+          <div className="flex-shrink-0 p-2 lg:p-3 border-b border-apple-border/50">
             <div className="flex items-center gap-2">
-              <Lock className="w-5 h-5 text-apple-accent flex-shrink-0" />
-              <h3 className="font-semibold text-apple-text text-sm">Contraseña de empleado</h3>
+              <Lock className="w-4 h-4 lg:w-5 lg:h-5 text-apple-accent flex-shrink-0" />
+              <h3 className="font-semibold text-apple-text text-xs lg:text-sm">Contraseña de empleado</h3>
             </div>
-            <p className="text-xs text-apple-text2 mt-1 leading-snug">
-              Edita contraseñas; queda registrado en Movimientos.
+            <p className="text-[10px] lg:text-xs text-apple-text2 mt-0.5 leading-snug">
+              Edita contraseñas; queda en Movimientos.
             </p>
           </div>
-          <div className="flex-1 min-h-0 overflow-y-auto p-3 space-y-2">
+          <div className="flex-1 min-h-0 flex flex-col justify-center p-2 lg:p-3 gap-1.5 lg:space-y-2 overflow-hidden">
             {employees.map((emp) => (
-              <div key={emp.id} className="px-3 py-2 bg-apple-bg rounded-xl border border-apple-border space-y-1.5">
-                <span className="text-xs font-medium text-apple-text block">{emp.label}</span>
-                <div className="flex flex-col sm:flex-row gap-1.5">
+              <div key={emp.id} className="flex items-center gap-1.5 lg:block lg:px-3 lg:py-2 bg-apple-bg rounded-lg lg:rounded-xl border border-apple-border lg:space-y-1.5 flex-shrink-0">
+                <span className="text-[10px] lg:text-xs font-medium text-apple-text w-14 lg:w-full shrink-0 lg:block truncate">{emp.label}</span>
+                <div className="flex flex-1 min-w-0 gap-1 lg:flex-row gap-1.5">
                   <input
                     type={showPassword ? "text" : "password"}
                     value={editingPassword[emp.id] ?? emp.password}
@@ -142,21 +142,18 @@ export default function ConfigPage() {
                       setEditingPassword((prev) => ({ ...prev, [emp.id]: e.target.value }))
                     }
                     placeholder="Contraseña"
-                    className="flex-1 min-w-0 px-2.5 py-1.5 bg-apple-surface border border-apple-border rounded-lg text-xs font-mono text-apple-text placeholder-apple-text2 focus:outline-none focus:ring-2 focus:ring-apple-accent"
+                    className="flex-1 min-w-0 px-2 py-1 lg:py-1.5 bg-apple-surface border border-apple-border rounded-lg text-[11px] lg:text-xs font-mono text-apple-text placeholder-apple-text2 focus:outline-none focus:ring-2 focus:ring-apple-accent"
                   />
                   <button
                     type="button"
                     onClick={() => onSavePassword(emp)}
                     disabled={savingEmployeeId !== null}
-                    className="min-w-[72px] px-2.5 py-1.5 bg-apple-accent text-white text-xs font-medium rounded-lg hover:opacity-90 flex-shrink-0 inline-flex items-center justify-center gap-1.5 disabled:opacity-90 disabled:cursor-wait"
+                    className="shrink-0 w-16 lg:min-w-[72px] px-2 py-1 lg:py-1.5 bg-apple-accent text-white text-[10px] lg:text-xs font-medium rounded-lg hover:opacity-90 inline-flex items-center justify-center gap-0.5 lg:gap-1.5 disabled:opacity-90 disabled:cursor-wait"
                   >
                     {savingEmployeeId === emp.id ? (
-                      <Loader2 className="w-3.5 h-3.5 text-white animate-spin flex-shrink-0" aria-hidden />
+                      <Loader2 className="w-3 h-3 lg:w-3.5 lg:h-3.5 text-white animate-spin" aria-hidden />
                     ) : savedEmployeeId === emp.id ? (
-                      <>
-                        <Check className="w-3.5 h-3.5 text-white flex-shrink-0" aria-hidden />
-                        Guardado
-                      </>
+                      <><Check className="w-3 h-3 lg:w-3.5 lg:h-3.5" aria-hidden /> <span className="hidden sm:inline">Guardado</span></>
                     ) : (
                       "Guardar"
                     )}
@@ -165,11 +162,11 @@ export default function ConfigPage() {
               </div>
             ))}
           </div>
-          <div className="flex-shrink-0 p-3 pt-0">
+          <div className="flex-shrink-0 p-2 lg:p-3 pt-0">
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="w-full px-3 py-2 text-xs bg-apple-accent text-white rounded-xl hover:opacity-90 font-medium"
+              className="w-full px-2 py-1.5 lg:py-2 text-[10px] lg:text-xs bg-apple-accent text-white rounded-lg lg:rounded-xl hover:opacity-90 font-medium"
             >
               {showPassword ? "Ocultar contraseñas" : "Ver contraseñas"}
             </button>
@@ -177,21 +174,21 @@ export default function ConfigPage() {
         </section>
 
         {/* Generar pedido */}
-        <section className="flex flex-col min-h-0 bg-apple-surface rounded-2xl border border-apple-border overflow-hidden flex-1">
-          <div className="flex-shrink-0 p-3 border-b border-apple-border/50">
+        <section className="flex flex-col min-h-0 lg:flex-1 bg-apple-surface rounded-2xl border border-apple-border overflow-hidden flex-shrink-0 lg:min-w-0">
+          <div className="flex-shrink-0 p-2 lg:p-3 border-b border-apple-border/50">
             <div className="flex items-center gap-2">
-              <ShoppingCart className="w-5 h-5 text-apple-accent flex-shrink-0" />
-              <h3 className="font-semibold text-apple-text text-sm">Generar pedido</h3>
+              <ShoppingCart className="w-4 h-4 lg:w-5 lg:h-5 text-apple-accent flex-shrink-0" />
+              <h3 className="font-semibold text-apple-text text-xs lg:text-sm">Generar pedido</h3>
             </div>
-            <p className="text-xs text-apple-text2 mt-1 leading-snug">
-              Texto con lo que falta por pedir y botellas bajo 25%. Envíalo por WhatsApp.
+            <p className="text-[10px] lg:text-xs text-apple-text2 mt-0.5 leading-snug">
+              Lo que falta por pedir y botellas bajo 25%. Envíalo por WhatsApp.
             </p>
           </div>
-          <div className="flex-1 min-h-0 flex items-center justify-center p-4">
+          <div className="flex-1 min-h-0 flex items-center justify-center p-3 lg:p-4">
             <button
               type="button"
               onClick={handleGenerateOrder}
-              className="inline-flex items-center justify-center gap-2 w-full max-w-xs px-4 py-3 bg-apple-accent text-white text-sm font-medium rounded-xl hover:opacity-90 transition-opacity"
+              className="inline-flex items-center justify-center gap-2 w-full max-w-xs px-3 py-2.5 lg:py-3 bg-apple-accent text-white text-xs lg:text-sm font-medium rounded-xl hover:opacity-90 transition-opacity"
             >
               <ShoppingCart className="w-4 h-4" />
               Generar pedido
@@ -200,20 +197,20 @@ export default function ConfigPage() {
         </section>
 
         {/* Mi inventario */}
-        <section className="flex flex-col min-h-0 bg-apple-surface rounded-2xl border border-apple-border overflow-hidden flex-1">
-          <div className="flex-shrink-0 p-3 border-b border-apple-border/50">
+        <section className="flex flex-col min-h-0 lg:flex-1 bg-apple-surface rounded-2xl border border-apple-border overflow-hidden flex-shrink-0 lg:min-w-0">
+          <div className="flex-shrink-0 p-2 lg:p-3 border-b border-apple-border/50">
             <div className="flex items-center gap-2">
-              <Package className="w-5 h-5 text-apple-accent flex-shrink-0" />
-              <h3 className="font-semibold text-apple-text text-sm">Mi inventario</h3>
+              <Package className="w-4 h-4 lg:w-5 lg:h-5 text-apple-accent flex-shrink-0" />
+              <h3 className="font-semibold text-apple-text text-xs lg:text-sm">Mi inventario</h3>
             </div>
-            <p className="text-xs text-apple-text2 mt-1 leading-snug">
-              Las bebidas que elijas aparecen en Mi Barra. Añade o quita botellas.
+            <p className="text-[10px] lg:text-xs text-apple-text2 mt-0.5 leading-snug">
+              Las bebidas en Mi Barra. Añade o quita botellas.
             </p>
           </div>
-          <div className="flex-1 min-h-0 flex items-center justify-center p-4">
+          <div className="flex-1 min-h-0 flex items-center justify-center p-3 lg:p-4">
             <Link
               href="/select-bottles"
-              className="inline-flex items-center justify-center gap-2 w-full max-w-xs px-4 py-3 bg-apple-accent text-white text-sm font-medium rounded-xl hover:opacity-90 transition-opacity"
+              className="inline-flex items-center justify-center gap-2 w-full max-w-xs px-3 py-2.5 lg:py-3 bg-apple-accent text-white text-xs lg:text-sm font-medium rounded-xl hover:opacity-90 transition-opacity"
             >
               <Package className="w-4 h-4" />
               Selecciona tu inventario
