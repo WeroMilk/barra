@@ -6,9 +6,10 @@ import BottleThumbnail from "@/components/Bar/BottleThumbnail";
 import { categories } from "@/lib/bottlesData";
 import { loadBarBottles } from "@/lib/barStorage";
 import { Bottle } from "@/lib/types";
-import { movementsService } from "@/lib/movements";
+import { movementsService, notificationsService } from "@/lib/movements";
 import { demoAuth } from "@/lib/demoAuth";
 import { motion, AnimatePresence } from "framer-motion";
+import confetti from "canvas-confetti";
 
 type SortOption = "name-asc" | "quantity-desc" | "quantity-asc" | "custom";
 
@@ -36,6 +37,11 @@ export default function BarPage() {
   const [displayBottles, setDisplayBottles] = useState<Bottle[]>([]);
   const thumbnailScrollRef = useRef<HTMLDivElement>(null);
   const dragStartIndex = useRef<number | null>(null);
+
+  // Inventario completo: contar botellas revisadas (✓ o ✗) hasta completar
+  const [inventoryActive, setInventoryActive] = useState(false);
+  const [inventoryReviewedIds, setInventoryReviewedIds] = useState<Set<string>>(new Set());
+  const inventoryCompletedRef = useRef(false);
 
   useEffect(() => {
     const savedOrder = localStorage.getItem("bottles-custom-order");
@@ -84,6 +90,48 @@ export default function BarPage() {
   useEffect(() => {
     setActiveIndex(0);
   }, [selectedCategory]);
+
+  const handleStartInventory = useCallback(() => {
+    setInventoryActive(true);
+    setInventoryReviewedIds(new Set());
+    inventoryCompletedRef.current = false;
+  }, []);
+
+  const handleBottleReviewed = useCallback((bottleId: string) => {
+    setInventoryReviewedIds((prev) => new Set(prev).add(bottleId));
+  }, []);
+
+  useEffect(() => {
+    if (!inventoryActive || displayBottles.length === 0 || inventoryCompletedRef.current) return;
+    const total = displayBottles.length;
+    const allReviewed = displayBottles.every((b) => inventoryReviewedIds.has(b.id));
+    if (!allReviewed) return;
+    inventoryCompletedRef.current = true;
+    setInventoryActive(false);
+    setInventoryReviewedIds(new Set());
+    const runConfetti = () => {
+      const count = 200;
+      const defaults = { origin: { y: 0.6 }, zIndex: 9999 };
+      function fire(particleRatio: number, opts: confetti.Options) {
+        confetti({ ...defaults, ...opts, particleCount: Math.floor(count * particleRatio) });
+      }
+      fire(0.25, { spread: 26, startVelocity: 55 });
+      fire(0.2, { spread: 60 });
+      fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+      fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+      fire(0.1, { spread: 120, startVelocity: 45 });
+    };
+    runConfetti();
+    movementsService.add({
+      type: "inventory_complete",
+      bottleId: "_",
+      bottleName: "Inventario",
+      newValue: total,
+      userName: demoAuth.getCurrentUser()?.name ?? "Usuario",
+      description: `Inventario completo: ${total} botellas revisadas`,
+    });
+    notificationsService.incrementUnread();
+  }, [inventoryActive, inventoryReviewedIds, displayBottles]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -177,9 +225,9 @@ export default function BarPage() {
 
   return (
     <div className="h-full flex flex-col overflow-hidden">
-      {/* Selector de categoría (sin espacio respecto al header) */}
-      <div className="flex-shrink-0 px-2 pt-1.5 pb-1.5 bg-apple-surface border-b border-apple-border">
-        <div className="flex gap-1.5 overflow-x-auto scrollbar-hide pb-0.5">
+      {/* Selector de categoría (alineado con header y contenido) */}
+      <div className="flex-shrink-0 px-2 pt-1.5 pb-1.5 bg-apple-surface border-b border-apple-border flex justify-center">
+        <div className="w-full max-w-3xl mx-auto flex gap-1.5 overflow-x-auto scrollbar-hide pb-0.5">
           <button
             type="button"
             onClick={() => setSelectedCategory("todos")}
@@ -208,60 +256,71 @@ export default function BarPage() {
         </div>
       </div>
 
-      <div className="flex-1 overflow-hidden min-h-0 overflow-y-auto">
-        <AnimatePresence mode="wait">
-          {displayBottles.length === 0 ? (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="h-full flex flex-col items-center justify-center px-6 text-center"
-            >
-              <p className="text-apple-text2 text-sm">
-                {selectedCategory === "todos"
-                  ? "No hay botellas en tu bar"
-                  : `No hay botellas de ${categories.find((c) => c.id === selectedCategory)?.name ?? selectedCategory} en tu inventario`}
-              </p>
-              <p className="text-apple-text2 text-xs mt-1">
-                Añade botellas desde &quot;Selecciona tu inventario&quot; en Configuración
-              </p>
-            </motion.div>
-          ) : displayBottles[activeIndex] ? (
-            <motion.div
-              key={`${displayBottles[activeIndex].id}-${activeIndex}`}
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -50 }}
-              transition={{ duration: 0.3 }}
-              className="h-full"
-            >
-              <BottleDisplay bottle={displayBottles[activeIndex]} onBottleUpdate={handleBottleUpdate} />
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
+      <div className="flex-1 overflow-hidden min-h-0 overflow-y-auto flex justify-center">
+        <div className="w-full max-w-3xl h-full mx-auto">
+          <AnimatePresence mode="wait">
+            {displayBottles.length === 0 ? (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="h-full flex flex-col items-center justify-center px-6 text-center"
+              >
+                <p className="text-apple-text2 text-sm">
+                  {selectedCategory === "todos"
+                    ? "No hay botellas en tu bar"
+                    : `No hay botellas de ${categories.find((c) => c.id === selectedCategory)?.name ?? selectedCategory} en tu inventario`}
+                </p>
+                <p className="text-apple-text2 text-xs mt-1">
+                  Añade botellas desde &quot;Selecciona tu inventario&quot; en Configuración
+                </p>
+              </motion.div>
+            ) : displayBottles[activeIndex] ? (
+              <motion.div
+                key={`${displayBottles[activeIndex].id}-${activeIndex}`}
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                transition={{ duration: 0.3 }}
+                className="h-full"
+              >
+                <BottleDisplay
+                bottle={displayBottles[activeIndex]}
+                onBottleUpdate={handleBottleUpdate}
+                inventoryActive={inventoryActive}
+                inventoryReviewedCount={displayBottles.filter((b) => inventoryReviewedIds.has(b.id)).length}
+                inventoryTotal={displayBottles.length}
+                onStartInventory={handleStartInventory}
+                onBottleReviewed={handleBottleReviewed}
+              />
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
+        </div>
       </div>
 
       {displayBottles.length > 0 && (
-        <div className="bg-apple-surface border-t border-apple-border px-2 py-1 sm:px-3 sm:py-2 flex-shrink-0">
-          <div className="flex items-center justify-between mb-1 sm:mb-2 px-0.5 gap-1 sm:gap-2">
-            <span className="text-[9px] sm:text-[10px] text-apple-text2 truncate">{getSortLabel(sortOption)}</span>
-            <button
-              onClick={handleSortClick}
-              className="flex items-center gap-1 px-1.5 py-0.5 sm:px-2 sm:py-1 text-[9px] sm:text-[10px] text-apple-text2 bg-apple-bg border border-apple-border rounded-md hover:!bg-apple-accent hover:!text-white hover:!border-apple-accent transition-colors"
-              title="Cambiar orden"
+        <div className="bg-apple-surface border-t border-apple-border px-2 py-1 sm:px-3 sm:py-2 flex-shrink-0 flex justify-center">
+          <div className="w-full max-w-3xl mx-auto">
+            <div className="flex items-center justify-between mb-1 sm:mb-2 px-0.5 gap-1 sm:gap-2">
+              <span className="text-[9px] sm:text-[10px] text-apple-text2 truncate">{getSortLabel(sortOption)}</span>
+              <button
+                onClick={handleSortClick}
+                className="flex items-center gap-1 px-1.5 py-0.5 sm:px-2 sm:py-1 text-[9px] sm:text-[10px] text-apple-text2 bg-apple-bg border border-apple-border rounded-md hover:!bg-apple-accent hover:!text-white hover:!border-apple-accent transition-colors"
+                title="Cambiar orden"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="sm:w-2.5 sm:h-2.5">
+                  <path d="M3 6h18M7 12h10M11 18h2" />
+                </svg>
+                Orden
+              </button>
+            </div>
+            <div
+              ref={thumbnailScrollRef}
+              className="flex gap-1.5 sm:gap-2 overflow-x-auto scrollbar-hide justify-center"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+              onDragOver={(e) => e.preventDefault()}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="sm:w-2.5 sm:h-2.5">
-                <path d="M3 6h18M7 12h10M11 18h2" />
-              </svg>
-              Orden
-            </button>
-          </div>
-          <div
-            ref={thumbnailScrollRef}
-            className="flex gap-1.5 sm:gap-2 overflow-x-auto scrollbar-hide"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-            onDragOver={(e) => e.preventDefault()}
-          >
-            {displayBottles.map((bottle, index) => (
+              {displayBottles.map((bottle, index) => (
               <BottleThumbnail
                 key={`bottle-${bottle.id}-${index}`}
                 bottle={bottle}
@@ -274,6 +333,7 @@ export default function BarPage() {
                 isDragging={isDragging && draggedIndex === index}
               />
             ))}
+            </div>
           </div>
         </div>
       )}

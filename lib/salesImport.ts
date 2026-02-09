@@ -50,11 +50,22 @@ function normalizeName(name: string): string {
 
 /**
  * Encuentra la botella que mejor coincide con el nombre del producto.
+ * Acepta "Nombre 750 ml" (de la plantilla Excel) y hace match por nombre + size.
  */
 function findMatchingBottle(productName: string, bottles: Bottle[]): Bottle | null {
   const norm = normalizeName(productName);
   if (!norm) return null;
-  // Match exacto normalizado
+  // Match "Nombre 750 ml" o "Nombre 750ml" -> nombre + size
+  const mlSuffix = /^(.+?)\s+(\d+)\s*ml$/i.exec(norm);
+  if (mlSuffix) {
+    const namePart = mlSuffix[1].trim();
+    const sizeMl = parseInt(mlSuffix[2], 10);
+    const byNameAndSize = bottles.find(
+      (b) => normalizeName(b.name) === namePart && b.size === sizeMl
+    );
+    if (byNameAndSize) return byNameAndSize;
+  }
+  // Match exacto normalizado (solo nombre)
   const exact = bottles.find((b) => normalizeName(b.name) === norm);
   if (exact) return exact;
   // Contiene el nombre de la botella

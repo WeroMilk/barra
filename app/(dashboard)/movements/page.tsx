@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { movementsService, notificationsService, Movement } from "@/lib/movements";
 import { motion } from "framer-motion";
-import { Check, X, Edit, Settings, ChevronLeft, ChevronRight, Package, Type, Calendar, FileSpreadsheet, ArrowLeftRight } from "lucide-react";
+import { Check, X, Edit, Settings, ChevronLeft, ChevronRight, Package, Type, Calendar, FileSpreadsheet, ArrowLeftRight, ClipboardCheck } from "lucide-react";
 import { isBeerBottleId } from "@/lib/measurementRules";
 
 /** Items por página: móvil +1, desktop -1 para mejor lectura. */
@@ -47,6 +47,7 @@ export default function MovementsPage() {
     switch (type) {
       case "inventory_check_ok": return <Check className="w-4 h-4 text-green-600" />;
       case "inventory_check_fail": return <X className="w-4 h-4 text-red-600" />;
+      case "inventory_complete": return <ClipboardCheck className="w-4 h-4 text-emerald-600" />;
       case "edit": return <Edit className="w-4 h-4 text-orange-500" />;
       case "portion_change": return <Settings className="w-4 h-4 text-purple-500" />;
       case "inventory_list_updated": return <Package className="w-4 h-4 text-indigo-500" />;

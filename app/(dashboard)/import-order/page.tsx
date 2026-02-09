@@ -27,7 +27,7 @@ export default function ImportOrderPage() {
     setTemplateLoading(true);
     try {
       const blob = await buildSalesOrderExcelTemplate(bottles);
-      downloadSalesOrderTemplate(blob, "plantilla-pedido.xlsx");
+      downloadSalesOrderTemplate(blob, "plantilla-ingreso-pedido.xlsx");
     } catch (e) {
       setMessage("No se pudo generar la plantilla. Intenta de nuevo.");
       setStatus("error");
@@ -147,8 +147,8 @@ export default function ImportOrderPage() {
             La plantilla tiene columna <strong>Producto</strong> (lista con tus bebidas) y <strong>Cantidad</strong> (solo números enteros). Licores: cantidad en oz. Cerveza: en unidades.
           </p>
           <a
-            href="/plantilla-pedido.csv"
-            download="plantilla-pedido.csv"
+            href="/plantilla-ingreso-pedido.csv"
+            download="plantilla-ingreso-pedido.csv"
             className="text-sm text-apple-accent hover:underline"
           >
             Descargar plantilla CSV (sin validaciones)

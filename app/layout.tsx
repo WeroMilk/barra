@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
+import PWAInstall from "@/components/PWAInstall";
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -25,9 +26,11 @@ export const viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Barra - Gestión de Bar",
+  title: "MiBarra - Gestión de Bar",
   description: "Control de inventario de botellas y cervezas",
   icons: { icon: "/icon.svg", shortcut: "/icon.svg", apple: "/icon.svg" },
+  manifest: "/manifest.webmanifest",
+  appleWebApp: { capable: true, title: "MiBarra" },
 };
 
 export default function RootLayout({
@@ -47,7 +50,8 @@ export default function RootLayout({
                 var oLog = console.log, oWarn = console.warn, oInfo = console.info, oError = console.error;
                 var skip = function(msg) {
                   if (typeof msg !== 'string') return false;
-                  return /React DevTools|Fast Refresh|preload.*layout\\.css|Modo DEMO|Content Security Policy|CSP|unsafe-eval|script-src|ERR_EMPTY_RESPONSE|Failed to load resource|blocks the use of 'eval'/i.test(msg);
+                  var s = msg.toLowerCase();
+                  return /React DevTools|Fast Refresh|preload.*layout\\.css|Modo DEMO|content security policy|contentsecuritypolicy|csp|unsafe-eval|script-src|ERR_EMPTY_RESPONSE|Failed to load resource|blocks the use of|violates the following directive|violated-directive|eval.*blocked|blocked.*eval|pol[ií]tica de seguridad/i.test(msg) || s.indexOf('eval') !== -1 && (s.indexOf('block') !== -1 || s.indexOf('policy') !== -1 || s.indexOf('directive') !== -1);
                 };
                 console.log = function() { if (!skip(arguments[0])) oLog.apply(console, arguments); };
                 console.warn = function() { if (!skip(arguments[0])) oWarn.apply(console, arguments); };
@@ -58,6 +62,7 @@ export default function RootLayout({
           }}
         />
         {children}
+        <PWAInstall />
       </body>
     </html>
   );

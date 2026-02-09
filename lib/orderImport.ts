@@ -21,9 +21,22 @@ function normalizeName(name: string): string {
     .trim();
 }
 
+/**
+ * Encuentra la botella que coincide con el producto.
+ * Acepta "Nombre 750 ml" (de la plantilla Excel) y hace match por nombre + size.
+ */
 function findMatchingBottle(productName: string, bottles: Bottle[]): Bottle | null {
   const norm = normalizeName(productName);
   if (!norm) return null;
+  const mlSuffix = /^(.+?)\s+(\d+)\s*ml$/i.exec(norm);
+  if (mlSuffix) {
+    const namePart = mlSuffix[1].trim();
+    const sizeMl = parseInt(mlSuffix[2], 10);
+    const byNameAndSize = bottles.find(
+      (b) => normalizeName(b.name) === namePart && b.size === sizeMl
+    );
+    if (byNameAndSize) return byNameAndSize;
+  }
   const exact = bottles.find((b) => normalizeName(b.name) === norm);
   if (exact) return exact;
   for (const b of bottles) {

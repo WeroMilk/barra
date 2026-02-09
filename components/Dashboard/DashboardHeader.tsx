@@ -26,8 +26,8 @@ export default function DashboardHeader({ leftContent, notificationsCount = 0 }:
   return (
     <div className="bg-apple-surface border-b border-apple-border pl-2 pr-3 py-1.5 sm:pl-3 sm:pr-4 sm:py-2 flex-shrink-0 z-20 safe-area-x">
       <div className="flex items-center h-full relative min-h-[44px] sm:min-h-0">
-        <div className="flex-1 flex items-center justify-center min-w-0">
-          <div className="text-center truncate">
+        <div className="flex-1 flex items-center justify-center min-w-0 max-w-3xl mx-auto">
+          <div className="text-center truncate w-full">
             <h1 className="text-sm sm:text-base md:text-lg font-semibold text-apple-text leading-tight">Barra</h1>
             <p className="text-[9px] sm:text-[10px] text-apple-text2 leading-tight truncate max-w-[120px] sm:max-w-none mx-auto">
               {demoAuth.getCurrentUser()?.barName || "Mi Bar"}

@@ -20,11 +20,11 @@ export async function buildSalesOrderExcelTemplate(bottles: Bottle[]): Promise<B
   sheet.getColumn(1).width = 32;
   sheet.getColumn(2).width = 12;
 
-  // Hoja oculta con los nombres de las botellas (origen del desplegable)
+  // Hoja oculta con los nombres de las botellas + ml (origen del desplegable)
   const listSheet = wb.addWorksheet(LIST_SHEET_NAME, { state: "hidden" });
-  listSheet.getColumn(1).width = 35;
+  listSheet.getColumn(1).width = 40;
   bottles.forEach((b, i) => {
-    listSheet.getCell(i + 1, 1).value = b.name;
+    listSheet.getCell(i + 1, 1).value = `${b.name} ${b.size} ml`;
   });
   const lastListRow = Math.max(1, bottles.length);
   const listRange = `'${LIST_SHEET_NAME}'!$A$1:$A$${lastListRow}`;

@@ -15,11 +15,24 @@ import { getCategoryColor, getBottleOutlineColor } from "@/lib/bottleColors";
 interface BottleDisplayProps {
   bottle: Bottle;
   onBottleUpdate?: (updatedBottle: Bottle) => void;
+  inventoryActive?: boolean;
+  inventoryReviewedCount?: number;
+  inventoryTotal?: number;
+  onStartInventory?: () => void;
+  onBottleReviewed?: (bottleId: string) => void;
 }
 
 const ML_TO_OZ = 0.033814;
 
-export default function BottleDisplay({ bottle, onBottleUpdate }: BottleDisplayProps) {
+export default function BottleDisplay({
+  bottle,
+  onBottleUpdate,
+  inventoryActive = false,
+  inventoryReviewedCount = 0,
+  inventoryTotal = 0,
+  onStartInventory,
+  onBottleReviewed,
+}: BottleDisplayProps) {
   const useUnits = isMeasuredInUnits(bottle.category);
   const unitLabel = getUnitLabel(bottle.category);
   const [lastVerifiedIso, setLastVerifiedIso] = useState<string | null>(() => getLastVerification(bottle.id));
@@ -54,6 +67,7 @@ export default function BottleDisplay({ bottle, onBottleUpdate }: BottleDisplayP
       setLastVerification(bottle.id, iso);
       setLastVerifiedIso(iso);
     }
+    onBottleReviewed?.(bottle.id);
   };
 
   const handleReportIncorrect = (employeeLabel: string) => {
@@ -65,6 +79,7 @@ export default function BottleDisplay({ bottle, onBottleUpdate }: BottleDisplayP
       userName: employeeLabel,
     });
     notificationsService.incrementUnread();
+    onBottleReviewed?.(bottle.id);
   };
 
   const handleInventoryEdit = (newDisplayValue: number, employeeLabel: string) => {
@@ -98,6 +113,7 @@ export default function BottleDisplay({ bottle, onBottleUpdate }: BottleDisplayP
       });
       onBottleUpdate?.(updatedBottle);
     }
+    onBottleReviewed?.(bottle.id);
   };
 
   const applyUnitsUpdate = (newCapacity: number, newRemaining: number) => {
@@ -275,7 +291,25 @@ export default function BottleDisplay({ bottle, onBottleUpdate }: BottleDisplayP
 
       {/* Misma disposición siempre: [ Verificar | Botella | Porción ] */}
       <div className="flex-1 flex items-stretch justify-center gap-1 sm:gap-2 md:gap-4 px-1 sm:px-2 py-0.5 min-h-0">
-        <div className="flex-shrink-0 flex items-center">
+        <div className="flex-shrink-0 flex flex-col items-center gap-1.5 sm:gap-2">
+          {/* Botón Inventario: inicia conteo; durante inventario muestra progreso */}
+          {onStartInventory != null && inventoryTotal > 0 && (
+            inventoryActive ? (
+              <div className="text-center min-h-[28px] flex flex-col justify-center">
+                <span className="text-[10px] min-[400px]:text-xs font-semibold text-apple-accent">
+                  Inventario {inventoryReviewedCount}/{inventoryTotal}
+                </span>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={onStartInventory}
+                className="px-2 py-1 min-[400px]:px-2.5 min-[400px]:py-1.5 rounded-lg bg-apple-accent text-white text-[10px] min-[400px]:text-xs font-medium hover:opacity-90 active:scale-95 transition-all shadow"
+              >
+                Inventario
+              </button>
+            )
+          )}
           <InventoryVerification
             displayValue={useUnits ? remainingUnits : remaining}
             unit={useUnits ? "units" : "oz"}

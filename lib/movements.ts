@@ -1,6 +1,7 @@
 export type MovementType =
   | "inventory_check_ok"
   | "inventory_check_fail"
+  | "inventory_complete"
   | "edit"
   | "portion_change"
   | "inventory_list_updated"
