@@ -45,6 +45,9 @@ export default function ReportPage() {
       <div className="flex-shrink-0 px-4 pt-2 pb-1">
         <h2 className="text-lg font-semibold text-apple-text">Reporte de ventas</h2>
         <p className="text-xs text-apple-text2">Ventas del día, semana, mes y lo más vendido</p>
+        <p className="text-[10px] text-apple-text2 mt-0.5">
+          Solo ventas de este mes ({new Date().toLocaleString("es-ES", { month: "long" }).replace(/^\w/, (c) => c.toUpperCase())})
+        </p>
       </div>
 
       <div className="flex-1 min-h-0 overflow-hidden flex flex-col justify-center p-4 gap-3 max-w-lg mx-auto w-full">
