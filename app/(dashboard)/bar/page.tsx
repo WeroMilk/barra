@@ -224,10 +224,10 @@ export default function BarPage() {
   }, []);
 
   return (
-    <div className="h-full flex flex-col overflow-hidden">
-      {/* Selector de categoría (alineado con header y contenido) */}
-      <div className="flex-shrink-0 px-2 pt-1.5 pb-1.5 bg-apple-surface border-b border-apple-border flex justify-center">
-        <div className="w-full max-w-3xl mx-auto flex gap-1.5 overflow-x-auto scrollbar-hide pb-0.5">
+    <div className="h-full flex flex-col min-w-0 overflow-x-hidden overflow-y-hidden">
+      {/* Selector de categoría: full width en móvil, centrado con max-width en desktop */}
+      <div className="flex-shrink-0 px-2 pt-1.5 pb-1.5 bg-apple-surface border-b border-apple-border">
+        <div className="w-full min-w-0 md:max-w-3xl md:mx-auto flex gap-1.5 overflow-x-auto scrollbar-hide pb-0.5">
           <button
             type="button"
             onClick={() => setSelectedCategory("todos")}
@@ -256,8 +256,8 @@ export default function BarPage() {
         </div>
       </div>
 
-      <div className="flex-1 overflow-hidden min-h-0 overflow-y-auto flex justify-center">
-        <div className="w-full max-w-3xl h-full mx-auto">
+      <div className="flex-1 min-h-0 min-w-0 overflow-hidden overflow-y-auto md:flex md:justify-center">
+        <div className="w-full min-w-0 h-full md:max-w-3xl md:mx-auto">
           <AnimatePresence mode="wait">
             {displayBottles.length === 0 ? (
               <motion.div
@@ -299,8 +299,8 @@ export default function BarPage() {
       </div>
 
       {displayBottles.length > 0 && (
-        <div className="bg-apple-surface border-t border-apple-border px-2 py-1 sm:px-3 sm:py-2 flex-shrink-0 flex justify-center">
-          <div className="w-full max-w-3xl mx-auto">
+        <div className="bg-apple-surface border-t border-apple-border px-2 py-1 sm:px-3 sm:py-2 flex-shrink-0">
+          <div className="w-full min-w-0 md:max-w-3xl md:mx-auto">
             <div className="flex items-center justify-between mb-1 sm:mb-2 px-0.5 gap-1 sm:gap-2">
               <span className="text-[9px] sm:text-[10px] text-apple-text2 truncate">{getSortLabel(sortOption)}</span>
               <button
@@ -316,7 +316,7 @@ export default function BarPage() {
             </div>
             <div
               ref={thumbnailScrollRef}
-              className="flex gap-1.5 sm:gap-2 overflow-x-auto scrollbar-hide justify-center"
+              className="flex gap-1.5 sm:gap-2 overflow-x-auto scrollbar-hide"
               style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
               onDragOver={(e) => e.preventDefault()}
             >

@@ -290,8 +290,8 @@ export default function BottleDisplay({
       </div>
 
       {/* Misma disposición siempre: [ Verificar | Botella | Porción ] */}
-      <div className="flex-1 flex items-stretch justify-center gap-1 sm:gap-2 md:gap-4 px-1 sm:px-2 py-0.5 min-h-0">
-        <div className="flex-shrink-0 flex flex-col items-center gap-1.5 sm:gap-2">
+      <div className="flex-1 flex items-stretch justify-center gap-1 sm:gap-2 md:gap-4 px-1 sm:px-2 py-0.5 min-h-0 min-w-0 overflow-hidden">
+        <div className="flex-shrink-0 flex flex-col items-center gap-1.5 sm:gap-2 min-w-0">
           {/* Botón Inventario: inicia conteo; durante inventario muestra progreso */}
           {onStartInventory != null && inventoryTotal > 0 && (
             inventoryActive ? (
