@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { FileSpreadsheet, Upload, CheckCircle, AlertCircle } from "lucide-react";
+import { FileSpreadsheet, Upload, CheckCircle, AlertCircle, Download } from "lucide-react";
 import {
   getBarBottles,
   saveBarBottles,
@@ -12,6 +12,7 @@ import {
 import { setLastInventoryUpdate } from "@/lib/inventoryUpdate";
 import { movementsService } from "@/lib/movements";
 import { demoAuth } from "@/lib/demoAuth";
+import { buildSalesOrderExcelTemplate, downloadSalesOrderTemplate } from "@/lib/excelTemplate";
 
 export default function ImportSalesPage() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -19,6 +20,26 @@ export default function ImportSalesPage() {
   const [appliedCount, setAppliedCount] = useState(0);
   const [unmatchedCount, setUnmatchedCount] = useState(0);
   const [detailRows, setDetailRows] = useState<string[]>([]);
+  const [templateLoading, setTemplateLoading] = useState(false);
+
+  const handleDownloadTemplate = useCallback(async () => {
+    const bottles = getBarBottles();
+    if (bottles.length === 0) {
+      setMessage("Primero configura tu inventario en Mi Barra (Selecciona Tu Inventario).");
+      setStatus("error");
+      return;
+    }
+    setTemplateLoading(true);
+    try {
+      const blob = await buildSalesOrderExcelTemplate(bottles);
+      downloadSalesOrderTemplate(blob, "plantilla-ventas.xlsx");
+    } catch (e) {
+      setMessage("No se pudo generar la plantilla. Intenta de nuevo.");
+      setStatus("error");
+    } finally {
+      setTemplateLoading(false);
+    }
+  }, []);
 
   const processFile = useCallback(async (file: File) => {
     setStatus("loading");
@@ -123,6 +144,18 @@ export default function ImportSalesPage() {
         <div className="bg-apple-surface rounded-xl border border-apple-border p-4 space-y-3">
           <p className="text-sm text-apple-text2">
             Flujo: tener inventario en Mi Barra → configurar porción (oz o unidades por cobro) → importar este archivo → revisar cada botella con ✓ o ✗.
+          </p>
+          <button
+            type="button"
+            onClick={handleDownloadTemplate}
+            disabled={templateLoading}
+            className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-apple-accent text-white rounded-xl hover:opacity-90 transition-opacity font-medium text-sm disabled:opacity-60"
+          >
+            <Download className="w-5 h-5 flex-shrink-0" />
+            {templateLoading ? "Generando…" : "Descargar plantilla Excel"}
+          </button>
+          <p className="text-xs text-apple-text2">
+            La plantilla tiene columna <strong>Producto</strong> (lista con tus bebidas) y <strong>Cantidad</strong> (solo números enteros).
           </p>
           <label className="flex flex-col items-center justify-center gap-2 py-6 px-4 border-2 border-dashed border-apple-border rounded-xl hover:bg-apple-bg transition-colors cursor-pointer">
             <Upload className="w-10 h-10 text-apple-text2" />

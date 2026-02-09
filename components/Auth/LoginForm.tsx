@@ -51,7 +51,7 @@ export default function LoginForm() {
       <div className="w-full max-w-md">
         <div className="bg-apple-surface rounded-3xl shadow-xl border border-apple-border p-6 sm:p-8">
           <div className="text-center mb-6 sm:mb-8">
-            <h1 className="text-3xl sm:text-4xl font-semibold text-apple-text mb-2">Barra</h1>
+            <h1 className="text-3xl sm:text-4xl font-semibold text-apple-accent mb-2">MiBarra</h1>
             <p className="text-apple-text2">Gestión Profesional de Bar</p>
           </div>
 

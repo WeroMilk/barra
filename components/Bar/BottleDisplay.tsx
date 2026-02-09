@@ -264,7 +264,7 @@ export default function BottleDisplay({ bottle, onBottleUpdate }: BottleDisplayP
   return (
     <div className="flex flex-col h-full min-h-0 overflow-hidden">
       {/* Información superior - mismo en todos los dispositivos */}
-      <div className="text-center px-2 py-1 flex-shrink-0">
+      <div className="text-center px-2 pt-5 pb-1 flex-shrink-0">
         <h1 className="text-sm min-[400px]:text-base sm:text-lg md:text-xl font-semibold text-apple-text leading-tight truncate px-1">
           {bottle.name}
         </h1>

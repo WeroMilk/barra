@@ -47,7 +47,7 @@ export default function RootLayout({
                 var oLog = console.log, oWarn = console.warn, oInfo = console.info, oError = console.error;
                 var skip = function(msg) {
                   if (typeof msg !== 'string') return false;
-                  return /React DevTools|Fast Refresh|preload.*layout\\.css|Modo DEMO|Content Security Policy|ERR_EMPTY_RESPONSE|Failed to load resource/i.test(msg);
+                  return /React DevTools|Fast Refresh|preload.*layout\\.css|Modo DEMO|Content Security Policy|CSP|unsafe-eval|script-src|ERR_EMPTY_RESPONSE|Failed to load resource|blocks the use of 'eval'/i.test(msg);
                 };
                 console.log = function() { if (!skip(arguments[0])) oLog.apply(console, arguments); };
                 console.warn = function() { if (!skip(arguments[0])) oWarn.apply(console, arguments); };

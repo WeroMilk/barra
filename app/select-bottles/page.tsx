@@ -113,7 +113,7 @@ export default function SelectBottlesPage() {
       >
         {/* 1. Header compacto en móvil para evitar scroll */}
         <div
-          className="bg-apple-surface border-b border-apple-border px-2 py-1.5 min-[380px]:px-4 min-[380px]:py-2.5 sm:px-5 sm:py-3 md:px-6 md:py-4 flex-shrink-0 z-10"
+          className="bg-apple-surface border-b border-apple-border pl-2 pr-4 py-1.5 min-[380px]:pl-4 min-[380px]:pr-5 min-[380px]:py-2.5 sm:pl-5 sm:pr-6 sm:py-3 md:pl-6 md:pr-6 md:py-4 flex-shrink-0 z-10"
           style={{ paddingTop: "max(0.375rem, env(safe-area-inset-top, 0px))" }}
         >
           <div className="max-w-6xl mx-auto flex items-center justify-between gap-2 min-w-0">
@@ -192,7 +192,7 @@ export default function SelectBottlesPage() {
               </div>
             ) : (
               <div className="w-full min-w-0">
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1 min-[380px]:gap-1.5 sm:gap-2 md:gap-3 lg:gap-4 w-full min-w-0 [grid-auto-rows:minmax(82px,1fr)] min-[380px]:[grid-auto-rows:minmax(90px,1fr)] sm:[grid-auto-rows:minmax(100px,1fr)] md:[grid-auto-rows:minmax(114px,1fr)] lg:[grid-auto-rows:minmax(128px,1fr)]">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1 min-[380px]:gap-1.5 sm:gap-2 md:gap-3 lg:gap-4 w-full min-w-0 [grid-auto-rows:minmax(98px,1fr)] min-[380px]:[grid-auto-rows:minmax(106px,1fr)] sm:[grid-auto-rows:minmax(118px,1fr)] md:[grid-auto-rows:minmax(132px,1fr)] lg:[grid-auto-rows:minmax(148px,1fr)]">
                   {paginatedBottles.map((bottle, index) => (
                     <motion.div
                       key={bottle.id}

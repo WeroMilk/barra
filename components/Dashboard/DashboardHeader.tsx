@@ -24,7 +24,7 @@ export default function DashboardHeader({ leftContent, notificationsCount = 0 }:
     }`;
 
   return (
-    <div className="bg-apple-surface border-b border-apple-border px-2 py-1.5 sm:px-3 sm:py-2 flex-shrink-0 z-20 safe-area-x">
+    <div className="bg-apple-surface border-b border-apple-border pl-2 pr-3 py-1.5 sm:pl-3 sm:pr-4 sm:py-2 flex-shrink-0 z-20 safe-area-x">
       <div className="flex items-center h-full relative min-h-[44px] sm:min-h-0">
         <div className="flex-1 flex items-center justify-center min-w-0">
           <div className="text-center truncate">
