@@ -101,12 +101,32 @@ export default function MovementsPage() {
       hour: "2-digit", minute: "2-digit",
     }).format(date);
 
+  const handleClearAll = () => {
+    if (!movements.length) return;
+    const confirmed = window.confirm("¿Seguro que quieres borrar todo el historial de movimientos?");
+    if (!confirmed) return;
+    movementsService.clear();
+    setMovements([]);
+    setCurrentPage(1);
+  };
+
   return (
     <div className="h-full flex flex-col overflow-hidden">
       <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
-        <div className="px-4 pt-2 pb-1 flex-shrink-0 md:pt-2 md:pb-1">
-          <h2 className="text-lg font-semibold text-apple-text">Movimientos</h2>
-          <p className="text-xs text-apple-text2">Historial de cambios en el inventario</p>
+        <div className="px-4 pt-2 pb-1 flex-shrink-0 md:pt-2 md:pb-1 flex items-center justify-between gap-2">
+          <div>
+            <h2 className="text-lg font-semibold text-apple-text">Movimientos</h2>
+            <p className="text-xs text-apple-text2">Historial de cambios en el inventario</p>
+          </div>
+          {movements.length > 0 && (
+            <button
+              type="button"
+              onClick={handleClearAll}
+              className="text-[11px] md:text-xs px-2.5 py-1.5 rounded-lg border border-apple-border text-apple-text2 hover:text-red-600 hover:border-red-400 hover:bg-red-50 transition-colors"
+            >
+              Borrar historial
+            </button>
+          )}
         </div>
 
         <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-4 pb-1 md:pb-2" style={{ WebkitOverflowScrolling: "touch" }}>

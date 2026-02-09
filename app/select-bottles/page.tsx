@@ -13,17 +13,24 @@ import LogoutButton from "@/components/Auth/LogoutButton";
 import BottleCard from "@/components/SelectBottles/BottleCard";
 import { motion } from "framer-motion";
 
-/** Items por pantalla según ancho y alto (móvil: evita boxes cortados). */
+/** Items por pantalla según ancho y alto.
+ *  - Desktop / tablet: 10 boxes (para vista fija y clara).
+ *  - Móvil: ajusta por altura para evitar boxes cortados.
+ */
 function getItemsPerPage(width: number, height: number = 800) {
-  if (width >= 1024) return 12;
-  if (width >= 768) return 12;
-  // Móvil: ajustar por altura para que quepan todos los boxes sin cortar
+  // Desktop y tablet: siempre 10 por página
+  if (width >= 1024) return 10;
+  if (width >= 768) return 10;
+
+  // Móvil muy estrecho
   if (width < 380) {
     if (height < 600) return 4;
     if (height < 680) return 6;
     if (height < 760) return 8;
     return 10;
   }
+
+  // Móvil normal: ajustar por altura
   if (height < 600) return 6;
   if (height < 680) return 8;
   if (height < 760) return 10;
@@ -35,7 +42,7 @@ export default function SelectBottlesPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(() =>
-    typeof window !== "undefined" ? getItemsPerPage(window.innerWidth, window.innerHeight) : 12
+    typeof window !== "undefined" ? getItemsPerPage(window.innerWidth, window.innerHeight) : 10
   );
   const router = useRouter();
 

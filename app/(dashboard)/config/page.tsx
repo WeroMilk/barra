@@ -131,7 +131,8 @@ export default function ConfigPage() {
                 <p className="text-[10px] sm:text-xs text-apple-text2 truncate">Edita contraseñas; se registra en Movimientos.</p>
               </div>
             </div>
-            <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-2 sm:p-3 space-y-2">
+            {/* En mobile, permitir scroll si hiciera falta; en desktop, sin scroll interno */}
+            <div className="flex-1 min-h-0 overflow-y-auto md:overflow-visible overflow-x-hidden p-2 sm:p-3 space-y-2">
               {employees.map((emp) => (
                 <div key={emp.id} className="rounded-lg sm:rounded-xl border border-apple-border bg-apple-bg/50 p-2 sm:p-3 space-y-1.5">
                   <label htmlFor={`employee-password-${emp.id}`} className="block text-[11px] sm:text-xs font-medium text-apple-text">{emp.label}</label>

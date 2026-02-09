@@ -43,9 +43,8 @@ export default function DashboardHeader({ leftContent, notificationsCount = 0 }:
             </div>
           </div>
 
-          {/* Móvil: solo hamburguesa a la izquierda */}
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center gap-0.5 md:hidden">
-            {leftContent}
+          {/* Móvil: solo hamburguesa a la derecha */}
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-0.5 md:hidden">
             <button
               type="button"
               onClick={() => setMenuOpen(true)}
@@ -108,16 +107,23 @@ export default function DashboardHeader({ leftContent, notificationsCount = 0 }:
               className="fixed top-0 right-0 bottom-0 w-[min(100vw-56px,320px)] max-w-full bg-apple-surface border-l border-apple-border shadow-2xl z-40 flex flex-col md:hidden"
               style={{ paddingTop: "env(safe-area-inset-top, 0px)", paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
             >
-              <div className="flex items-center justify-between flex-shrink-0 px-4 py-3 border-b border-apple-border/60">
-                <span className="text-sm font-semibold text-apple-text">Menú</span>
-                <button
-                  type="button"
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center justify-center w-10 h-10 rounded-xl text-apple-text2 hover:bg-apple-bg active:bg-apple-bg/80 transition-colors"
-                  aria-label="Cerrar menú"
-                >
-                  <X className="w-5 h-5" strokeWidth={2} />
-                </button>
+              <div className="flex flex-col flex-shrink-0 border-b border-apple-border/60">
+                <div className="flex items-center justify-between px-4 py-3">
+                  <span className="text-sm font-semibold text-apple-text">Menú</span>
+                  <button
+                    type="button"
+                    onClick={() => setMenuOpen(false)}
+                    className="flex items-center justify-center w-10 h-10 rounded-xl text-apple-text2 hover:bg-apple-bg active:bg-apple-bg/80 transition-colors"
+                    aria-label="Cerrar menú"
+                  >
+                    <X className="w-5 h-5" strokeWidth={2} />
+                  </button>
+                </div>
+                {leftContent && (
+                  <div className="px-4 pb-3 pt-1 border-t border-apple-border/60">
+                    {leftContent}
+                  </div>
+                )}
               </div>
               <nav className="flex-1 overflow-y-auto py-2" aria-label="Navegación principal">
                 <ul className="px-2 space-y-0.5">
