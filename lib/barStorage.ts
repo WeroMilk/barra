@@ -5,7 +5,7 @@ export const BAR_BOTTLES_KEY = "barra-bar-bottles";
 
 /**
  * Carga las botellas del bar desde localStorage.
- * Si no hay nada guardado, devuelve array vacío (el usuario elige desde Configuración → Selecciona tu inventario).
+ * Si no hay nada guardado, devuelve array vacío (el usuario elige desde Configuración → Modifica tu inventario).
  */
 export function loadBarBottles(): Bottle[] {
   if (typeof window === "undefined") return [];
@@ -34,7 +34,7 @@ export function saveBarBottles(bottles: Bottle[]): void {
 
 /**
  * Devuelve los IDs de las botellas actualmente guardadas como inventario del bar.
- * Útil para pre-seleccionar en la pantalla "Selecciona tu inventario".
+ * Útil para pre-seleccionar en la pantalla "Modifica tu inventario".
  */
 export function getBarBottleIds(): Set<string> {
   const bottles = loadBarBottles();

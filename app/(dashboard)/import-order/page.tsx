@@ -22,7 +22,7 @@ export default function ImportOrderPage() {
   const handleDownloadTemplate = useCallback(async () => {
     const bottles = loadBarBottles();
     if (bottles.length === 0) {
-      const msg = "Primero configura tu inventario en Configuración → Selecciona tu inventario.";
+      const msg = "Primero configura tu inventario en Configuración → Modifica tu inventario.";
       setMessage(msg);
       setStatus("error");
       toast.show({ title: "Error", message: msg, type: "error" });
@@ -73,7 +73,7 @@ export default function ImportOrderPage() {
 
       const bottles = loadBarBottles();
       if (bottles.length === 0) {
-        const msg = "No hay inventario. Configura las botellas en Configuración → Selecciona tu inventario.";
+        const msg = "No hay inventario. Configura las botellas en Configuración → Modifica tu inventario.";
         setStatus("error");
         setMessage(msg);
         toast.show({ title: "Error", message: msg, type: "error" });

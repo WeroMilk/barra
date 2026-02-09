@@ -16,6 +16,7 @@ export const EMPLOYEES: Employee[] = [
   { id: "Gerente", label: "Gerente", password: "gerente123" },
   { id: "001", label: "ID 001", password: "empleado001" },
   { id: "002", label: "ID 002", password: "empleado002" },
+  { id: "003", label: "ID 003", password: "003" },
 ];
 
 function getStoredPasswords(): Record<string, string> {

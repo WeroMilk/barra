@@ -287,7 +287,7 @@ export default function BarPage() {
                     : `No hay botellas de ${categories.find((c) => c.id === selectedCategory)?.name ?? selectedCategory} en tu inventario`}
                 </p>
                 <p className="text-apple-text2 text-xs mt-1">
-                  Añade botellas desde &quot;Selecciona tu inventario&quot; en Configuración
+                  Añade botellas desde &quot;Modifica tu inventario&quot; en Configuración
                 </p>
               </motion.div>
             ) : displayBottles[activeIndex] ? (
