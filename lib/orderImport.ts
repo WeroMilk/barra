@@ -53,8 +53,8 @@ export interface ApplyOrderResult {
 
 /**
  * Aplica el pedido al inventario: suma cantidad por cada fila.
- * Licores: quantityToAdd = oz a sumar.
- * Cerveza: quantityToAdd = unidades a sumar.
+ * Licores: quantityToAdd = número de BOTELLAS a sumar (cada una de size ml).
+ * Cerveza: quantityToAdd = unidades (latas/botellas) a sumar.
  */
 export function applyOrderToInventory(bottles: Bottle[], rows: OrderRow[]): ApplyOrderResult {
   const updated = bottles.map((b) => ({ ...b }));
@@ -75,6 +75,7 @@ export function applyOrderToInventory(bottles: Bottle[], rows: OrderRow[]): Appl
     const toAdd = Math.max(0, Number(row.quantityToAdd) || 0);
 
     if (useUnits) {
+      // Cerveza: cantidad = unidades (latas/botellas) a sumar
       const capacity = Number(b.sizeUnits) || 100;
       const current = Number(b.currentUnits) ?? 0;
       const addUnits = Math.round(toAdd);
@@ -86,13 +87,15 @@ export function applyOrderToInventory(bottles: Bottle[], rows: OrderRow[]): Appl
       };
       applied.push({ bottleName: b.name, added: newUnits - current, unit: "units" });
     } else {
+      // Licores: cantidad = número de BOTELLAS a sumar (cada botella = size ml)
       const currentOzMl = Number(b.currentOz) || 0;
-      const addMl = toAdd / ML_TO_OZ; // toAdd en oz -> ml
       const sizeMl = Number(b.size) || 750;
-      const newCurrentOzMl = currentOzMl + addMl;
-      const capped = Math.min(sizeMl, Math.max(0, newCurrentOzMl));
-      updated[index] = { ...b, currentOz: capped };
-      applied.push({ bottleName: b.name, added: toAdd, unit: "oz" });
+      const bottlesToAdd = Math.round(toAdd);
+      const addMl = bottlesToAdd * sizeMl;
+      const newCurrentOzMl = Math.max(0, currentOzMl + addMl);
+      const sizeOz = sizeMl * ML_TO_OZ;
+      updated[index] = { ...b, currentOz: newCurrentOzMl };
+      applied.push({ bottleName: b.name, added: bottlesToAdd * sizeOz, unit: "oz" });
     }
   }
 

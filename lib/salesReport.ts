@@ -117,7 +117,45 @@ export function getSalesStats(): SalesStats {
   };
 }
 
-/** Genera texto para descargar como .txt */
+export type ReportPeriod = "day" | "week" | "month";
+
+export interface SalesStatsForPeriod {
+  total: number;
+  label: string;
+  topProducts: { name: string; quantity: number; unit: string }[];
+}
+
+function filterByPeriod(entries: { date: Date; quantity: number; bottleName: string; unit: string }[], period: ReportPeriod) {
+  if (period === "day") return entries.filter((e) => isToday(e.date));
+  if (period === "week") return entries.filter((e) => isThisWeek(e.date));
+  return entries.filter((e) => isThisMonth(e.date));
+}
+
+export function getSalesStatsForPeriod(period: ReportPeriod): SalesStatsForPeriod {
+  const history = getHistory();
+  const entries = history.map((e) => ({
+    date: new Date(e.timestamp),
+    quantity: e.quantity,
+    bottleName: e.bottleName,
+    unit: e.unit === "units" ? "unid" : "oz",
+  }));
+  const filtered = filterByPeriod(entries, period);
+  let total = 0;
+  const byProduct: Record<string, { quantity: number; unit: string }> = {};
+  for (const e of filtered) {
+    total += e.quantity;
+    if (!byProduct[e.bottleName]) byProduct[e.bottleName] = { quantity: 0, unit: e.unit };
+    byProduct[e.bottleName].quantity += e.quantity;
+  }
+  const topProducts = Object.entries(byProduct)
+    .map(([name, { quantity, unit }]) => ({ name, quantity, unit }))
+    .sort((a, b) => b.quantity - a.quantity)
+    .slice(0, 10);
+  const labels: Record<ReportPeriod, string> = { day: "Día (hoy)", week: "Semana", month: "Mes" };
+  return { total, label: labels[period], topProducts };
+}
+
+/** Genera texto para descargar como .txt (resumen de todos los períodos) */
 export function buildReportText(stats: SalesStats): string {
   const lines: string[] = [
     "Reporte de ventas - MiBarra",
@@ -132,6 +170,27 @@ export function buildReportText(stats: SalesStats): string {
     "Lo más vendido",
     "--------------",
     ...stats.topProducts.map((p, i) => `${i + 1}. ${p.name}: ${p.quantity.toFixed(1)} ${p.unit}`),
+    "",
+    "--- MiBarra ---",
+  ];
+  return lines.join("\n");
+}
+
+/** Genera texto del reporte para un período concreto (día, semana o mes) */
+export function buildReportTextForPeriod(period: ReportPeriod, periodStats: SalesStatsForPeriod): string {
+  const lines: string[] = [
+    `Reporte de ventas por ${periodStats.label} - MiBarra`,
+    `Generado: ${new Date().toLocaleString("es-ES")}`,
+    "",
+    "Total ventas",
+    "------------",
+    `${periodStats.label}: ${periodStats.total.toFixed(1)}`,
+    "",
+    "Lo más vendido en el período",
+    "-----------------------------",
+    ...(periodStats.topProducts.length === 0
+      ? ["Sin datos"]
+      : periodStats.topProducts.map((p, i) => `${i + 1}. ${p.name}: ${p.quantity.toFixed(1)} ${p.unit}`)),
     "",
     "--- MiBarra ---",
   ];

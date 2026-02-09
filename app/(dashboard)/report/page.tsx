@@ -2,19 +2,27 @@
 
 import { useState, useEffect } from "react";
 import { Download, TrendingUp } from "lucide-react";
-import { getSalesStats, buildReportText, type SalesStats } from "@/lib/salesReport";
+import {
+  getSalesStats,
+  getSalesStatsForPeriod,
+  buildReportTextForPeriod,
+  type SalesStats,
+  type ReportPeriod,
+} from "@/lib/salesReport";
 
 export default function ReportPage() {
   const [stats, setStats] = useState<SalesStats | null>(null);
+  const [downloadPeriod, setDownloadPeriod] = useState<ReportPeriod>("day");
 
   useEffect(() => {
     setStats(getSalesStats());
   }, []);
 
   const handleDownload = () => {
-    if (!stats) return;
-    const text = buildReportText(stats);
-    const name = `reporte-ventas-${new Date().toISOString().slice(0, 10)}.txt`;
+    const periodStats = getSalesStatsForPeriod(downloadPeriod);
+    const text = buildReportTextForPeriod(downloadPeriod, periodStats);
+    const dateStr = new Date().toISOString().slice(0, 10);
+    const name = `reporte-ventas-${downloadPeriod}-${dateStr}.txt`;
     const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -92,15 +100,34 @@ export default function ReportPage() {
           </div>
         </div>
 
-        {/* Descargar reporte */}
-        <button
-          type="button"
-          onClick={handleDownload}
-          className="flex-shrink-0 w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-apple-accent text-white text-sm font-medium rounded-xl hover:opacity-90 transition-opacity"
-        >
-          <Download className="w-4 h-4 flex-shrink-0" />
-          Descargar reporte .txt
-        </button>
+        {/* Descargar reporte: elegir período */}
+        <div className="flex-shrink-0 space-y-2">
+          <p className="text-xs font-medium text-apple-text2">Descargar reporte por</p>
+          <div className="flex gap-2">
+            {(["day", "week", "month"] as const).map((period) => (
+              <button
+                key={period}
+                type="button"
+                onClick={() => setDownloadPeriod(period)}
+                className={`flex-1 py-2 px-3 rounded-xl text-sm font-medium transition-colors ${
+                  downloadPeriod === period
+                    ? "bg-apple-accent text-white"
+                    : "bg-apple-surface border border-apple-border text-apple-text2 hover:bg-apple-bg"
+                }`}
+              >
+                {period === "day" ? "Día" : period === "week" ? "Semana" : "Mes"}
+              </button>
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={handleDownload}
+            className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-apple-accent text-white text-sm font-medium rounded-xl hover:opacity-90 transition-opacity"
+          >
+            <Download className="w-4 h-4 flex-shrink-0" />
+            Descargar reporte .txt
+          </button>
+        </div>
       </div>
     </div>
   );

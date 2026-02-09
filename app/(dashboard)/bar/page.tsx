@@ -130,7 +130,8 @@ export default function BarPage() {
       fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
       fire(0.1, { spread: 120, startVelocity: 45 });
     };
-    runConfetti();
+    // Pequeño retraso para que el confeti se dispare tras el re-render y se vea bien
+    setTimeout(runConfetti, 100);
     movementsService.add({
       type: "inventory_complete",
       bottleId: "_",

@@ -24,16 +24,18 @@ export default function DashboardFooter() {
 
   return (
     <div className="bg-apple-surface border-t border-apple-border px-2 py-1 sm:px-3 sm:py-1.5 flex-shrink-0">
-      <div className="flex flex-row items-center justify-between gap-1 text-[8px] sm:text-[10px] text-apple-text2 min-h-[24px]">
+      <div className="relative flex flex-row items-center justify-between gap-1 text-[8px] sm:text-[10px] text-apple-text2 min-h-[24px]">
         {/* Izquierda (móvil y desktop): Último reporte de ventas */}
-        <div className="flex items-center gap-1 min-w-0 truncate">
+        <div className="flex items-center gap-1 min-w-0 truncate flex-1 justify-start">
           <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-apple-success rounded-full animate-pulse flex-shrink-0" />
           <span className="truncate">Último reporte de ventas: {lastSale}</span>
         </div>
-        {/* Centro (solo desktop): Último inventario */}
-        <span className="hidden md:inline truncate min-w-0 flex-1 text-center px-1">Último inventario: {lastInventory}</span>
+        {/* Centro (solo desktop): Último inventario, centrado en la página */}
+        <span className="hidden md:inline absolute left-1/2 -translate-x-1/2 text-center whitespace-nowrap pointer-events-none">
+          Último inventario: {lastInventory}
+        </span>
         {/* Derecha (móvil y desktop): Tiempo real */}
-        <span className="text-apple-text2/80 flex-shrink-0">Tiempo real</span>
+        <span className="text-apple-text2/80 flex-shrink-0 flex-1 flex justify-end">Tiempo real</span>
       </div>
     </div>
   );

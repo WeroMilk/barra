@@ -113,31 +113,29 @@ export default function ConfigPage() {
 
   return (
     <div className="h-full min-h-0 flex flex-col overflow-hidden bg-apple-bg">
-      <header className="flex-shrink-0 px-4 sm:px-6 pt-4 sm:pt-5 pb-3 border-b border-apple-border/60">
-        <h1 className="text-xl sm:text-2xl font-semibold text-apple-text tracking-tight">Configuraciones</h1>
-        <p className="text-sm text-apple-text2 mt-1">Ajustes del bar, contraseñas y pedidos.</p>
-      </header>
+      <div className="flex-shrink-0 px-4 pt-2 pb-1">
+        <h2 className="text-lg font-semibold text-apple-text">Configuraciones</h2>
+        <p className="text-xs text-apple-text2">Ajustes del bar, contraseñas y pedidos.</p>
+      </div>
 
-      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden">
-        <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto flex flex-col lg:flex-row gap-4 lg:gap-6">
+      <div className="flex-1 min-h-0 overflow-hidden flex flex-col px-2 sm:px-4 py-2 sm:py-3">
+        <div className="flex-1 min-h-0 min-w-0 flex flex-col md:flex-row gap-2 sm:gap-3 max-w-5xl mx-auto w-full">
           {/* Contraseña de empleado */}
-          <section className="flex flex-col flex-shrink-0 lg:flex-1 bg-apple-surface rounded-2xl border border-apple-border shadow-sm overflow-hidden">
-            <div className="flex-shrink-0 px-4 sm:px-5 py-4 border-b border-apple-border/60 bg-apple-surface">
-              <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-apple-accent/10">
-                  <Lock className="w-4 h-4 text-apple-accent" aria-hidden />
-                </div>
-                <div>
-                  <h2 className="text-sm sm:text-base font-semibold text-apple-text">Contraseña de empleado</h2>
-                  <p className="text-xs text-apple-text2 mt-0.5">Edita contraseñas; se registra en Movimientos.</p>
-                </div>
+          <section className="flex flex-col min-h-0 min-w-0 flex-1 bg-apple-surface rounded-xl sm:rounded-2xl border border-apple-border shadow-sm overflow-hidden">
+            <div className="flex-shrink-0 px-3 sm:px-4 py-2 sm:py-3 border-b border-apple-border/60 flex items-center gap-2">
+              <div className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-apple-accent/10">
+                <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-apple-accent" aria-hidden />
+              </div>
+              <div className="min-w-0">
+                <h2 className="text-xs sm:text-sm font-semibold text-apple-text truncate">Contraseña de empleado</h2>
+                <p className="text-[10px] sm:text-xs text-apple-text2 truncate">Edita contraseñas; se registra en Movimientos.</p>
               </div>
             </div>
-            <div className="flex-1 p-4 sm:p-5 space-y-3">
+            <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-2 sm:p-3 space-y-2">
               {employees.map((emp) => (
-                <div key={emp.id} className="rounded-xl border border-apple-border bg-apple-bg/50 p-3 sm:p-4 space-y-2 sm:space-y-3">
-                  <label htmlFor={`employee-password-${emp.id}`} className="block text-xs font-medium text-apple-text sm:text-sm">{emp.label}</label>
-                  <div className="flex flex-col sm:flex-row gap-2">
+                <div key={emp.id} className="rounded-lg sm:rounded-xl border border-apple-border bg-apple-bg/50 p-2 sm:p-3 space-y-1.5">
+                  <label htmlFor={`employee-password-${emp.id}`} className="block text-[11px] sm:text-xs font-medium text-apple-text">{emp.label}</label>
+                  <div className="flex flex-col sm:flex-row gap-1.5">
                     <input
                       id={`employee-password-${emp.id}`}
                       name={`employee-password-${emp.id}`}
@@ -147,18 +145,18 @@ export default function ConfigPage() {
                         setEditingPassword((prev) => ({ ...prev, [emp.id]: e.target.value }))
                       }
                       placeholder="Contraseña"
-                      className="flex-1 min-w-0 px-3 py-2.5 sm:py-2 bg-apple-surface border border-apple-border rounded-xl text-sm font-mono text-apple-text placeholder-apple-text2 focus:outline-none focus:ring-2 focus:ring-apple-accent focus:border-transparent"
+                      className="flex-1 min-w-0 px-2.5 py-2 text-xs sm:text-sm font-mono bg-apple-surface border border-apple-border rounded-lg focus:outline-none focus:ring-2 focus:ring-apple-accent"
                     />
                     <button
                       type="button"
                       onClick={() => onSavePassword(emp)}
                       disabled={savingEmployeeId !== null}
-                      className="shrink-0 px-4 py-2.5 sm:py-2 bg-apple-accent text-white text-sm font-medium rounded-xl hover:opacity-90 transition-opacity inline-flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed min-h-[44px] sm:min-h-0"
+                      className="shrink-0 px-3 py-2 bg-apple-accent text-white text-xs sm:text-sm font-medium rounded-lg hover:opacity-90 inline-flex items-center justify-center gap-1.5 disabled:opacity-70 min-h-[40px] sm:min-h-0"
                     >
                       {savingEmployeeId === emp.id ? (
-                        <Loader2 className="w-4 h-4 animate-spin" aria-hidden />
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" aria-hidden />
                       ) : savedEmployeeId === emp.id ? (
-                        <><Check className="w-4 h-4" aria-hidden /> Guardado</>
+                        <><Check className="w-3.5 h-3.5" aria-hidden /> Guardado</>
                       ) : (
                         "Guardar"
                       )}
@@ -167,11 +165,11 @@ export default function ConfigPage() {
                 </div>
               ))}
             </div>
-            <div className="flex-shrink-0 p-4 sm:p-5 pt-0">
+            <div className="flex-shrink-0 p-2 sm:p-3 pt-0">
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="w-full px-4 py-2.5 sm:py-2 text-sm font-medium rounded-xl border border-apple-border text-apple-text bg-apple-surface hover:bg-apple-bg transition-colors"
+                className="w-full px-3 py-2 text-xs sm:text-sm font-medium rounded-lg border border-apple-border text-apple-text bg-apple-surface hover:bg-apple-bg"
               >
                 {showPassword ? "Ocultar contraseñas" : "Ver contraseñas"}
               </button>
@@ -179,49 +177,45 @@ export default function ConfigPage() {
           </section>
 
           {/* Generar pedido */}
-          <section className="flex flex-col flex-shrink-0 lg:flex-1 bg-apple-surface rounded-2xl border border-apple-border shadow-sm overflow-hidden">
-            <div className="flex-shrink-0 px-4 sm:px-5 py-4 border-b border-apple-border/60">
-              <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-apple-accent/10">
-                  <ShoppingCart className="w-4 h-4 text-apple-accent" aria-hidden />
-                </div>
-                <div>
-                  <h2 className="text-sm sm:text-base font-semibold text-apple-text">Generar pedido</h2>
-                  <p className="text-xs text-apple-text2 mt-0.5">Faltantes y botellas bajo 25%. Envíalo por WhatsApp.</p>
-                </div>
+          <section className="flex flex-col min-h-0 min-w-0 flex-1 bg-apple-surface rounded-xl sm:rounded-2xl border border-apple-border shadow-sm overflow-hidden flex-shrink-0 md:flex-shrink">
+            <div className="flex-shrink-0 px-3 sm:px-4 py-2 sm:py-3 border-b border-apple-border/60 flex items-center gap-2">
+              <div className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-apple-accent/10">
+                <ShoppingCart className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-apple-accent" aria-hidden />
+              </div>
+              <div className="min-w-0">
+                <h2 className="text-xs sm:text-sm font-semibold text-apple-text truncate">Generar pedido</h2>
+                <p className="text-[10px] sm:text-xs text-apple-text2 truncate">Faltantes y bajo 25%. WhatsApp.</p>
               </div>
             </div>
-            <div className="flex-1 flex items-center justify-center p-6 sm:p-8">
+            <div className="flex-1 flex items-center justify-center p-3 sm:p-6 min-h-[80px]">
               <button
                 type="button"
                 onClick={handleGenerateOrder}
-                className="inline-flex items-center justify-center gap-2 w-full max-w-xs px-5 py-3.5 sm:py-3 bg-apple-accent text-white text-sm font-medium rounded-xl hover:opacity-90 transition-opacity shadow-sm"
+                className="inline-flex items-center justify-center gap-1.5 w-full max-w-[200px] px-3 py-2.5 sm:py-3 bg-apple-accent text-white text-xs sm:text-sm font-medium rounded-xl hover:opacity-90"
               >
-                <ShoppingCart className="w-4 h-4 shrink-0" />
+                <ShoppingCart className="w-3.5 h-3.5 shrink-0" />
                 Generar pedido
               </button>
             </div>
           </section>
 
           {/* Mi inventario */}
-          <section className="flex flex-col flex-shrink-0 lg:flex-1 bg-apple-surface rounded-2xl border border-apple-border shadow-sm overflow-hidden">
-            <div className="flex-shrink-0 px-4 sm:px-5 py-4 border-b border-apple-border/60">
-              <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-apple-accent/10">
-                  <Package className="w-4 h-4 text-apple-accent" aria-hidden />
-                </div>
-                <div>
-                  <h2 className="text-sm sm:text-base font-semibold text-apple-text">Mi inventario</h2>
-                  <p className="text-xs text-apple-text2 mt-0.5">Bebidas en tu barra. Añade o quita botellas.</p>
-                </div>
+          <section className="flex flex-col min-h-0 min-w-0 flex-1 bg-apple-surface rounded-xl sm:rounded-2xl border border-apple-border shadow-sm overflow-hidden flex-shrink-0 md:flex-shrink">
+            <div className="flex-shrink-0 px-3 sm:px-4 py-2 sm:py-3 border-b border-apple-border/60 flex items-center gap-2">
+              <div className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-apple-accent/10">
+                <Package className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-apple-accent" aria-hidden />
+              </div>
+              <div className="min-w-0">
+                <h2 className="text-xs sm:text-sm font-semibold text-apple-text truncate">Mi inventario</h2>
+                <p className="text-[10px] sm:text-xs text-apple-text2 truncate">Añade o quita botellas.</p>
               </div>
             </div>
-            <div className="flex-1 flex items-center justify-center p-6 sm:p-8">
+            <div className="flex-1 flex items-center justify-center p-3 sm:p-6 min-h-[80px]">
               <Link
                 href="/select-bottles"
-                className="inline-flex items-center justify-center gap-2 w-full max-w-xs px-5 py-3.5 sm:py-3 bg-apple-accent text-white text-sm font-medium rounded-xl hover:opacity-90 transition-opacity shadow-sm"
+                className="inline-flex items-center justify-center gap-1.5 w-full max-w-[200px] px-3 py-2.5 sm:py-3 bg-apple-accent text-white text-xs sm:text-sm font-medium rounded-xl hover:opacity-90"
               >
-                <Package className="w-4 h-4 shrink-0" />
+                <Package className="w-3.5 h-3.5 shrink-0" />
                 Selecciona tu inventario
               </Link>
             </div>
