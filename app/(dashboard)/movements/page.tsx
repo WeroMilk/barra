@@ -6,22 +6,23 @@ import { motion } from "framer-motion";
 import { Check, X, Edit, Settings, ChevronLeft, ChevronRight, Package, Type, Calendar, FileSpreadsheet, ArrowLeftRight, ClipboardCheck, Lock } from "lucide-react";
 import { isBeerBottleId } from "@/lib/measurementRules";
 
-/** Items por página según ancho y alto (móvil: evita boxes cortados). */
+/** Items por página: en móvil sin scroll (reducir boxes para que todo quepa). */
 function getItemsPerPage(width: number, height: number = 800) {
   if (width >= 1024) return 6;
   if (width >= 768) return 7;
-  // Móvil: ajustar por altura para que no se corte ningún box
-  if (height < 600) return 5;
-  if (height < 680) return 6;
-  if (height < 760) return 7;
-  return 8;
+  // Móvil: pocos ítems para que no haga falta scroll (sensación de app)
+  if (height < 560) return 4;
+  if (height < 620) return 5;
+  if (height < 700) return 5;
+  if (height < 780) return 6;
+  return 7;
 }
 
 export default function MovementsPage() {
   const [movements, setMovements] = useState<Movement[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(() =>
-    typeof window !== "undefined" ? getItemsPerPage(window.innerWidth, window.innerHeight) : 8
+    typeof window !== "undefined" ? getItemsPerPage(window.innerWidth, window.innerHeight) : 6
   );
 
   useEffect(() => {
