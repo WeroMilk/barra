@@ -19,8 +19,8 @@ export default function DashboardHeader({ leftContent, notificationsCount = 0 }:
   const linkClass = (path: string) =>
     `p-1.5 rounded-md transition-colors ${
       pathname === path
-        ? "text-apple-accent bg-apple-accent/10"
-        : "text-apple-text2 hover:bg-apple-bg hover:text-apple-text"
+        ? "text-apple-accent"
+        : "text-apple-text2 hover:text-apple-text"
     }`;
 
   return (
