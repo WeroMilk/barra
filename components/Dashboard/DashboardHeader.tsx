@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { Wine, Bell, Settings, FileSpreadsheet, Package } from "lucide-react";
+import { Wine, Bell, Settings, FileSpreadsheet, DollarSign, Package } from "lucide-react";
 import LogoutButton from "@/components/Auth/LogoutButton";
 import { demoAuth } from "@/lib/demoAuth";
 
@@ -50,6 +50,9 @@ export default function DashboardHeader({ leftContent, notificationsCount = 0 }:
           </Link>
           <Link href="/import-sales" className={`touch-target-min flex items-center justify-center min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 p-1.5 rounded-md ${linkClass("/import-sales")}`} title="Importar ventas" aria-label="Importar ventas">
             <FileSpreadsheet className="w-4 h-4 flex-shrink-0" />
+          </Link>
+          <Link href="/report" className={`touch-target-min flex items-center justify-center min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 p-1.5 rounded-md ${linkClass("/report")}`} title="Reporte de ventas" aria-label="Reporte de ventas">
+            <DollarSign className="w-4 h-4 flex-shrink-0" />
           </Link>
         </div>
         {/* Derecha (móvil y desktop): Importar pedido, Configuración, Salir */}

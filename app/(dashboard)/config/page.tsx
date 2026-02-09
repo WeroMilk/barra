@@ -112,111 +112,121 @@ export default function ConfigPage() {
   };
 
   return (
-    <div className="h-full min-h-0 flex flex-col overflow-hidden">
-      <div className="flex-shrink-0 px-4 pt-2 pb-1">
-        <h2 className="text-lg font-semibold text-apple-text">Configuraciones</h2>
-        <p className="text-xs text-apple-text2">Ajustes del bar y contraseñas de empleados.</p>
-      </div>
+    <div className="h-full min-h-0 flex flex-col overflow-hidden bg-apple-bg">
+      <header className="flex-shrink-0 px-4 sm:px-6 pt-4 sm:pt-5 pb-3 border-b border-apple-border/60">
+        <h1 className="text-xl sm:text-2xl font-semibold text-apple-text tracking-tight">Configuraciones</h1>
+        <p className="text-sm text-apple-text2 mt-1">Ajustes del bar, contraseñas y pedidos.</p>
+      </header>
 
-      <div className="flex-1 min-h-0 overflow-hidden flex flex-col lg:flex-row items-stretch justify-center p-3 lg:p-4 pt-1 gap-2 lg:gap-4 max-w-5xl mx-auto w-full">
-        {/* Contraseña de empleado: en móvil compacto para no hacer scroll */}
-        <section className="flex flex-col min-h-0 lg:flex-1 bg-apple-surface rounded-2xl border border-apple-border overflow-hidden flex-shrink-0 lg:min-w-0">
-          <div className="flex-shrink-0 p-2 lg:p-3 border-b border-apple-border/50">
-            <div className="flex items-center gap-2">
-              <Lock className="w-4 h-4 lg:w-5 lg:h-5 text-apple-accent flex-shrink-0" />
-              <h3 className="font-semibold text-apple-text text-xs lg:text-sm">Contraseña de empleado</h3>
-            </div>
-            <p className="text-[10px] lg:text-xs text-apple-text2 mt-0.5 leading-snug">
-              Edita contraseñas; queda en Movimientos.
-            </p>
-          </div>
-          <div className="flex-1 min-h-0 flex flex-col justify-center p-2 lg:p-3 gap-1.5 lg:space-y-2 overflow-hidden">
-            {employees.map((emp) => (
-              <div key={emp.id} className="flex items-center gap-1.5 lg:block lg:px-3 lg:py-2 bg-apple-bg rounded-lg lg:rounded-xl border border-apple-border lg:space-y-1.5 flex-shrink-0">
-                <span className="text-[10px] lg:text-xs font-medium text-apple-text w-14 lg:w-full shrink-0 lg:block truncate">{emp.label}</span>
-                <div className="flex flex-1 min-w-0 gap-1 lg:flex-row gap-1.5">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    value={editingPassword[emp.id] ?? emp.password}
-                    onChange={(e) =>
-                      setEditingPassword((prev) => ({ ...prev, [emp.id]: e.target.value }))
-                    }
-                    placeholder="Contraseña"
-                    className="flex-1 min-w-0 px-2 py-1 lg:py-1.5 bg-apple-surface border border-apple-border rounded-lg text-[11px] lg:text-xs font-mono text-apple-text placeholder-apple-text2 focus:outline-none focus:ring-2 focus:ring-apple-accent"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => onSavePassword(emp)}
-                    disabled={savingEmployeeId !== null}
-                    className="shrink-0 w-16 lg:min-w-[72px] px-2 py-1 lg:py-1.5 bg-apple-accent text-white text-[10px] lg:text-xs font-medium rounded-lg hover:opacity-90 inline-flex items-center justify-center gap-0.5 lg:gap-1.5 disabled:opacity-90 disabled:cursor-wait"
-                  >
-                    {savingEmployeeId === emp.id ? (
-                      <Loader2 className="w-3 h-3 lg:w-3.5 lg:h-3.5 text-white animate-spin" aria-hidden />
-                    ) : savedEmployeeId === emp.id ? (
-                      <><Check className="w-3 h-3 lg:w-3.5 lg:h-3.5" aria-hidden /> <span className="hidden sm:inline">Guardado</span></>
-                    ) : (
-                      "Guardar"
-                    )}
-                  </button>
+      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden">
+        <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto flex flex-col lg:flex-row gap-4 lg:gap-6">
+          {/* Contraseña de empleado */}
+          <section className="flex flex-col flex-shrink-0 lg:flex-1 bg-apple-surface rounded-2xl border border-apple-border shadow-sm overflow-hidden">
+            <div className="flex-shrink-0 px-4 sm:px-5 py-4 border-b border-apple-border/60 bg-apple-surface">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-apple-accent/10">
+                  <Lock className="w-4 h-4 text-apple-accent" aria-hidden />
+                </div>
+                <div>
+                  <h2 className="text-sm sm:text-base font-semibold text-apple-text">Contraseña de empleado</h2>
+                  <p className="text-xs text-apple-text2 mt-0.5">Edita contraseñas; se registra en Movimientos.</p>
                 </div>
               </div>
-            ))}
-          </div>
-          <div className="flex-shrink-0 p-2 lg:p-3 pt-0">
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="w-full px-2 py-1.5 lg:py-2 text-[10px] lg:text-xs bg-apple-accent text-white rounded-lg lg:rounded-xl hover:opacity-90 font-medium"
-            >
-              {showPassword ? "Ocultar contraseñas" : "Ver contraseñas"}
-            </button>
-          </div>
-        </section>
-
-        {/* Generar pedido */}
-        <section className="flex flex-col min-h-0 lg:flex-1 bg-apple-surface rounded-2xl border border-apple-border overflow-hidden flex-shrink-0 lg:min-w-0">
-          <div className="flex-shrink-0 p-2 lg:p-3 border-b border-apple-border/50">
-            <div className="flex items-center gap-2">
-              <ShoppingCart className="w-4 h-4 lg:w-5 lg:h-5 text-apple-accent flex-shrink-0" />
-              <h3 className="font-semibold text-apple-text text-xs lg:text-sm">Generar pedido</h3>
             </div>
-            <p className="text-[10px] lg:text-xs text-apple-text2 mt-0.5 leading-snug">
-              Lo que falta por pedir y botellas bajo 25%. Envíalo por WhatsApp.
-            </p>
-          </div>
-          <div className="flex-1 min-h-0 flex items-center justify-center p-3 lg:p-4">
-            <button
-              type="button"
-              onClick={handleGenerateOrder}
-              className="inline-flex items-center justify-center gap-2 w-full max-w-xs px-3 py-2.5 lg:py-3 bg-apple-accent text-white text-xs lg:text-sm font-medium rounded-xl hover:opacity-90 transition-opacity"
-            >
-              <ShoppingCart className="w-4 h-4" />
-              Generar pedido
-            </button>
-          </div>
-        </section>
-
-        {/* Mi inventario */}
-        <section className="flex flex-col min-h-0 lg:flex-1 bg-apple-surface rounded-2xl border border-apple-border overflow-hidden flex-shrink-0 lg:min-w-0">
-          <div className="flex-shrink-0 p-2 lg:p-3 border-b border-apple-border/50">
-            <div className="flex items-center gap-2">
-              <Package className="w-4 h-4 lg:w-5 lg:h-5 text-apple-accent flex-shrink-0" />
-              <h3 className="font-semibold text-apple-text text-xs lg:text-sm">Mi inventario</h3>
+            <div className="flex-1 p-4 sm:p-5 space-y-3">
+              {employees.map((emp) => (
+                <div key={emp.id} className="rounded-xl border border-apple-border bg-apple-bg/50 p-3 sm:p-4 space-y-2 sm:space-y-3">
+                  <label htmlFor={`employee-password-${emp.id}`} className="block text-xs font-medium text-apple-text sm:text-sm">{emp.label}</label>
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <input
+                      id={`employee-password-${emp.id}`}
+                      name={`employee-password-${emp.id}`}
+                      type={showPassword ? "text" : "password"}
+                      value={editingPassword[emp.id] ?? emp.password}
+                      onChange={(e) =>
+                        setEditingPassword((prev) => ({ ...prev, [emp.id]: e.target.value }))
+                      }
+                      placeholder="Contraseña"
+                      className="flex-1 min-w-0 px-3 py-2.5 sm:py-2 bg-apple-surface border border-apple-border rounded-xl text-sm font-mono text-apple-text placeholder-apple-text2 focus:outline-none focus:ring-2 focus:ring-apple-accent focus:border-transparent"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => onSavePassword(emp)}
+                      disabled={savingEmployeeId !== null}
+                      className="shrink-0 px-4 py-2.5 sm:py-2 bg-apple-accent text-white text-sm font-medium rounded-xl hover:opacity-90 transition-opacity inline-flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed min-h-[44px] sm:min-h-0"
+                    >
+                      {savingEmployeeId === emp.id ? (
+                        <Loader2 className="w-4 h-4 animate-spin" aria-hidden />
+                      ) : savedEmployeeId === emp.id ? (
+                        <><Check className="w-4 h-4" aria-hidden /> Guardado</>
+                      ) : (
+                        "Guardar"
+                      )}
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
-            <p className="text-[10px] lg:text-xs text-apple-text2 mt-0.5 leading-snug">
-              Las bebidas en Mi Barra. Añade o quita botellas.
-            </p>
-          </div>
-          <div className="flex-1 min-h-0 flex items-center justify-center p-3 lg:p-4">
-            <Link
-              href="/select-bottles"
-              className="inline-flex items-center justify-center gap-2 w-full max-w-xs px-3 py-2.5 lg:py-3 bg-apple-accent text-white text-xs lg:text-sm font-medium rounded-xl hover:opacity-90 transition-opacity"
-            >
-              <Package className="w-4 h-4" />
-              Selecciona tu inventario
-            </Link>
-          </div>
-        </section>
+            <div className="flex-shrink-0 p-4 sm:p-5 pt-0">
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="w-full px-4 py-2.5 sm:py-2 text-sm font-medium rounded-xl border border-apple-border text-apple-text bg-apple-surface hover:bg-apple-bg transition-colors"
+              >
+                {showPassword ? "Ocultar contraseñas" : "Ver contraseñas"}
+              </button>
+            </div>
+          </section>
+
+          {/* Generar pedido */}
+          <section className="flex flex-col flex-shrink-0 lg:flex-1 bg-apple-surface rounded-2xl border border-apple-border shadow-sm overflow-hidden">
+            <div className="flex-shrink-0 px-4 sm:px-5 py-4 border-b border-apple-border/60">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-apple-accent/10">
+                  <ShoppingCart className="w-4 h-4 text-apple-accent" aria-hidden />
+                </div>
+                <div>
+                  <h2 className="text-sm sm:text-base font-semibold text-apple-text">Generar pedido</h2>
+                  <p className="text-xs text-apple-text2 mt-0.5">Faltantes y botellas bajo 25%. Envíalo por WhatsApp.</p>
+                </div>
+              </div>
+            </div>
+            <div className="flex-1 flex items-center justify-center p-6 sm:p-8">
+              <button
+                type="button"
+                onClick={handleGenerateOrder}
+                className="inline-flex items-center justify-center gap-2 w-full max-w-xs px-5 py-3.5 sm:py-3 bg-apple-accent text-white text-sm font-medium rounded-xl hover:opacity-90 transition-opacity shadow-sm"
+              >
+                <ShoppingCart className="w-4 h-4 shrink-0" />
+                Generar pedido
+              </button>
+            </div>
+          </section>
+
+          {/* Mi inventario */}
+          <section className="flex flex-col flex-shrink-0 lg:flex-1 bg-apple-surface rounded-2xl border border-apple-border shadow-sm overflow-hidden">
+            <div className="flex-shrink-0 px-4 sm:px-5 py-4 border-b border-apple-border/60">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-apple-accent/10">
+                  <Package className="w-4 h-4 text-apple-accent" aria-hidden />
+                </div>
+                <div>
+                  <h2 className="text-sm sm:text-base font-semibold text-apple-text">Mi inventario</h2>
+                  <p className="text-xs text-apple-text2 mt-0.5">Bebidas en tu barra. Añade o quita botellas.</p>
+                </div>
+              </div>
+            </div>
+            <div className="flex-1 flex items-center justify-center p-6 sm:p-8">
+              <Link
+                href="/select-bottles"
+                className="inline-flex items-center justify-center gap-2 w-full max-w-xs px-5 py-3.5 sm:py-3 bg-apple-accent text-white text-sm font-medium rounded-xl hover:opacity-90 transition-opacity shadow-sm"
+              >
+                <Package className="w-4 h-4 shrink-0" />
+                Selecciona tu inventario
+              </Link>
+            </div>
+          </section>
+        </div>
       </div>
 
       {/* Modal Generar pedido */}
@@ -226,69 +236,74 @@ export default function ConfigPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 sm:p-6"
             onClick={() => setShowOrderModal(false)}
           >
             <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
+              initial={{ scale: 0.96, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
+              exit={{ scale: 0.96, opacity: 0 }}
+              transition={{ type: "tween", duration: 0.2 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-apple-surface rounded-2xl border border-apple-border shadow-xl max-w-lg w-full max-h-[90vh] flex flex-col"
+              className="bg-apple-surface rounded-2xl border border-apple-border shadow-2xl max-w-lg w-full max-h-[90vh] flex flex-col"
             >
-              <div className="p-4 border-b border-apple-border flex-shrink-0">
+              <div className="px-5 py-4 sm:px-6 sm:py-5 border-b border-apple-border/60 flex-shrink-0">
                 <h3 className="text-lg font-semibold text-apple-text">Generar pedido</h3>
-                <p className="text-xs text-apple-text2 mt-0.5">Vista previa del texto. Descárgalo o envíalo por WhatsApp.</p>
+                <p className="text-sm text-apple-text2 mt-1">Vista previa. Descarga o envía por WhatsApp.</p>
               </div>
-              <div className="p-4 flex-1 min-h-0 overflow-hidden flex flex-col gap-3">
-                <label className="text-xs font-medium text-apple-text">
-                  ¿A quién enviarlo?
-                </label>
-                <select
-                  id="order-recipient"
-                  name="orderRecipient"
-                  value={orderRecipient}
-                  onChange={(e) => setOrderRecipient(e.target.value)}
-                  className="w-full px-3 py-2 bg-apple-bg border border-apple-border rounded-xl text-sm text-apple-text focus:outline-none focus:ring-2 focus:ring-apple-accent"
-                >
-                  {WHATSAPP_RECIPIENTS.map((r) => (
-                    <option key={r.value} value={r.value}>
-                      {r.label}
-                    </option>
-                  ))}
-                </select>
-                <label className="text-xs font-medium text-apple-text">
-                  Vista previa
-                </label>
-                <textarea
-                  readOnly
-                  value={orderReportText}
-                  rows={12}
-                  className="w-full px-3 py-2 bg-apple-bg border border-apple-border rounded-xl text-xs sm:text-sm text-apple-text font-mono resize-none"
-                />
+              <div className="px-5 py-4 sm:px-6 sm:py-5 flex-1 min-h-0 overflow-hidden flex flex-col gap-4">
+                <div>
+                  <label htmlFor="order-recipient" className="block text-sm font-medium text-apple-text mb-1.5">
+                    ¿A quién enviarlo?
+                  </label>
+                  <select
+                    id="order-recipient"
+                    name="orderRecipient"
+                    value={orderRecipient}
+                    onChange={(e) => setOrderRecipient(e.target.value)}
+                    className="w-full px-3 py-2.5 bg-apple-bg border border-apple-border rounded-xl text-sm text-apple-text focus:outline-none focus:ring-2 focus:ring-apple-accent focus:border-transparent"
+                  >
+                    {WHATSAPP_RECIPIENTS.map((r) => (
+                      <option key={r.value} value={r.value}>
+                        {r.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex-1 min-h-0 flex flex-col">
+                  <label htmlFor="order-report-preview" className="block text-sm font-medium text-apple-text mb-1.5">Vista previa</label>
+                  <textarea
+                    id="order-report-preview"
+                    name="orderReportPreview"
+                    readOnly
+                    value={orderReportText}
+                    rows={10}
+                    className="w-full px-3 py-2.5 bg-apple-bg border border-apple-border rounded-xl text-sm text-apple-text font-mono resize-none flex-1 min-h-[120px]"
+                  />
+                </div>
               </div>
-              <div className="p-4 border-t border-apple-border flex flex-wrap gap-2 flex-shrink-0">
+              <div className="px-5 py-4 sm:px-6 sm:py-5 border-t border-apple-border/60 flex flex-wrap gap-2 sm:gap-3 flex-shrink-0">
                 <button
                   type="button"
                   onClick={() => setShowOrderModal(false)}
-                  className="px-4 py-2 rounded-xl border border-apple-border text-apple-text text-sm font-medium hover:bg-apple-bg transition-colors"
+                  className="px-4 py-2.5 rounded-xl border border-apple-border text-apple-text text-sm font-medium hover:bg-apple-bg transition-colors"
                 >
                   Cerrar
                 </button>
                 <button
                   type="button"
                   onClick={handleDownloadOrder}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-apple-accent text-white text-sm font-medium hover:opacity-90 transition-opacity"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-apple-accent text-white text-sm font-medium hover:opacity-90 transition-opacity"
                 >
-                  <Download className="w-4 h-4" />
+                  <Download className="w-4 h-4 shrink-0" />
                   Descargar .txt
                 </button>
                 <button
                   type="button"
                   onClick={handleSendWhatsApp}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-green-600 text-white text-sm font-medium hover:bg-green-700 transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#25D366] text-white text-sm font-medium hover:opacity-90 transition-opacity"
                 >
-                  <MessageCircle className="w-4 h-4" />
+                  <MessageCircle className="w-4 h-4 shrink-0" />
                   Enviar por WhatsApp
                 </button>
               </div>

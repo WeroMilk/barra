@@ -111,16 +111,18 @@ export function applySalesToInventory(options: ApplySalesOptions): ApplySalesRes
       continue;
     }
     const portion = getPortion ? getPortion(bottle) : isMeasuredInUnits(bottle.category) ? portionUnits : portionOz;
-    const toDeduct = row.quantitySold * portion;
-    const index = updated.findIndex((b) => b.id === bottle.id);
+    const quantitySold = Number(row.quantitySold) || 0;
+    if (quantitySold <= 0) continue;
+    const toDeduct = quantitySold * portion;
+    const index = updated.findIndex((bu) => bu.id === bottle.id);
     if (index === -1) continue;
 
     const b = updated[index];
     const useUnits = isMeasuredInUnits(b.category);
 
     if (useUnits) {
-      const current = b.currentUnits ?? 0;
-      const safeCurrent = Number.isFinite(Number(current)) ? Number(current) : 0;
+      const current = Number(b.currentUnits) ?? 0;
+      const safeCurrent = Number.isFinite(current) ? current : 0;
       const toDeductRounded = Math.round(toDeduct);
       const newUnits = Math.max(0, safeCurrent - toDeductRounded);
       const actualDeducted = safeCurrent - newUnits;
@@ -133,14 +135,15 @@ export function applySalesToInventory(options: ApplySalesOptions): ApplySalesRes
       };
       applied.push({ bottleName: b.name, deducted: actualDeducted, unit: "units", matched: true });
     } else {
-      const currentOzMl = Number(b.currentOz);
+      const currentOzMl = Number(b.currentOz) || 0;
       const safeOzMl = Number.isFinite(currentOzMl) ? currentOzMl : 0;
       const currentOz = safeOzMl * ML_TO_OZ;
       const toDeductCapped = Math.min(toDeduct, currentOz);
       const newOz = Math.max(0, currentOz - toDeductCapped);
+      const newOzMl = newOz / ML_TO_OZ;
       updated[index] = {
         ...b,
-        currentOz: newOz / ML_TO_OZ,
+        currentOz: newOzMl,
       };
       applied.push({ bottleName: b.name, deducted: toDeductCapped, unit: "oz", matched: true });
     }
@@ -149,19 +152,26 @@ export function applySalesToInventory(options: ApplySalesOptions): ApplySalesRes
   return { updatedBottles: updated, applied, unmatched };
 }
 
+/** Obtiene la clave real del objeto (insensible a mayúsculas) que coincide con el patrón. */
+function getColumnKey(row: { [key: string]: unknown }, pattern: RegExp, fallbackIndex: number): string {
+  const keys = Object.keys(row);
+  const lower = keys.map((k) => k.toLowerCase());
+  const i = lower.findIndex((h) => pattern.test(h));
+  if (i !== -1) return keys[i];
+  return keys[Math.min(fallbackIndex, keys.length - 1)] ?? "";
+}
+
 /**
  * Convierte la primera hoja de un libro XLSX en filas de ventas.
- * Heurística: busca columnas que parezcan "producto/nombre" y "cantidad/vendido".
- * Cuando tengas el formato de Soft Restaurant, ajustamos nombres de columnas aquí.
+ * Acepta columnas "Producto"/"Nombre" y "Cantidad"/"Vendido" (cualquier capitalización).
  */
 export function sheetToSalesRows(firstSheet: { [key: string]: unknown }[]): SalesRow[] {
   if (!firstSheet || firstSheet.length === 0) return [];
   const rows: SalesRow[] = [];
-  const headers = Object.keys(firstSheet[0] || {}).map((h) => String(h).toLowerCase());
+  const firstRow = firstSheet[0] || {};
 
-  const nameKey = headers.find((h) => /producto|nombre|item|articulo|descripcion|name|product/.test(h)) ?? headers[0];
-  const qtyKey =
-    headers.find((h) => /cantidad|vendido|venta|qty|quantity|unidades|sales/.test(h)) ?? headers[Math.min(1, headers.length - 1)];
+  const nameKey = getColumnKey(firstRow, /producto|nombre|item|articulo|descripcion|name|product/, 0);
+  const qtyKey = getColumnKey(firstRow, /cantidad|vendido|venta|qty|quantity|unidades|sales/, 1);
 
   for (const row of firstSheet) {
     const rawName = row[nameKey] ?? row[Object.keys(row)[0]];

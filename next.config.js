@@ -7,7 +7,7 @@ const nextConfig = {
   async rewrites() {
     return [{ source: '/favicon.ico', destination: '/icon.svg' }];
   },
-  // CSP con unsafe-eval para que no aparezca el aviso de "blocks the use of eval" (dev y producción)
+  // CSP que permite eval para evitar aviso "blocks the use of eval" (Next.js/Fast Refresh y dependencias)
   async headers() {
     return [
       {
@@ -15,7 +15,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "script-src 'self' 'unsafe-inline' 'unsafe-eval';",
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data: https:; connect-src 'self' https:; frame-ancestors 'self'; base-uri 'self'; form-action 'self';",
           },
         ],
       },

@@ -1,26 +1,39 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getLastInventoryUpdate } from "@/lib/inventoryUpdate";
+import { getLastSaleImport, LAST_SALE_IMPORT_EVENT } from "@/lib/lastSaleImport";
+import { getLastInventoryComplete, LAST_INVENTORY_COMPLETE_EVENT } from "@/lib/lastInventoryComplete";
 
 export default function DashboardFooter() {
-  const [lastUpdate, setLastUpdate] = useState("8/02/2026 11:45 am");
+  const [lastSale, setLastSale] = useState("—");
+  const [lastInventory, setLastInventory] = useState("—");
 
   useEffect(() => {
-    const update = () => setLastUpdate(getLastInventoryUpdate());
-    update();
-    window.addEventListener("mibarra-inventory-update-changed", update);
-    return () => window.removeEventListener("mibarra-inventory-update-changed", update);
+    const updateSale = () => setLastSale(getLastSaleImport());
+    updateSale();
+    window.addEventListener(LAST_SALE_IMPORT_EVENT, updateSale);
+    return () => window.removeEventListener(LAST_SALE_IMPORT_EVENT, updateSale);
+  }, []);
+
+  useEffect(() => {
+    const updateInv = () => setLastInventory(getLastInventoryComplete());
+    updateInv();
+    window.addEventListener(LAST_INVENTORY_COMPLETE_EVENT, updateInv);
+    return () => window.removeEventListener(LAST_INVENTORY_COMPLETE_EVENT, updateInv);
   }, []);
 
   return (
     <div className="bg-apple-surface border-t border-apple-border px-2 py-1 sm:px-3 sm:py-1.5 flex-shrink-0">
-      <div className="flex flex-row items-center justify-between md:justify-center gap-1 text-[8px] sm:text-[10px] text-apple-text2 min-h-[24px]">
-        <div className="flex items-center gap-1 min-w-0 truncate justify-center md:justify-center">
+      <div className="flex flex-row items-center justify-between gap-1 text-[8px] sm:text-[10px] text-apple-text2 min-h-[24px]">
+        {/* Izquierda (móvil y desktop): Último reporte de ventas */}
+        <div className="flex items-center gap-1 min-w-0 truncate">
           <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-apple-success rounded-full animate-pulse flex-shrink-0" />
-          <span className="truncate">Último inventario: {lastUpdate}</span>
+          <span className="truncate">Último reporte de ventas: {lastSale}</span>
         </div>
-        <span className="text-apple-text2/80 flex-shrink-0 hidden md:inline md:ml-1.5">Tiempo real</span>
+        {/* Centro (solo desktop): Último inventario */}
+        <span className="hidden md:inline truncate min-w-0 flex-1 text-center px-1">Último inventario: {lastInventory}</span>
+        {/* Derecha (móvil y desktop): Tiempo real */}
+        <span className="text-apple-text2/80 flex-shrink-0">Tiempo real</span>
       </div>
     </div>
   );

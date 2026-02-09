@@ -72,23 +72,24 @@ export function applyOrderToInventory(bottles: Bottle[], rows: OrderRow[]): Appl
 
     const b = updated[index];
     const useUnits = isMeasuredInUnits(b.category);
-    const toAdd = Math.max(0, row.quantityToAdd);
+    const toAdd = Math.max(0, Number(row.quantityToAdd) || 0);
 
     if (useUnits) {
-      const capacity = b.sizeUnits ?? 100;
-      const current = b.currentUnits ?? 0;
-      const newUnits = Math.min(capacity, current + Math.round(toAdd));
+      const capacity = Number(b.sizeUnits) || 100;
+      const current = Number(b.currentUnits) ?? 0;
+      const addUnits = Math.round(toAdd);
+      const newUnits = Math.min(capacity, Math.max(0, current + addUnits));
       updated[index] = {
         ...b,
         currentUnits: newUnits,
-        currentOz: capacity > 0 ? (newUnits / capacity) * b.size : 0,
+        currentOz: capacity > 0 ? (newUnits / capacity) * (Number(b.size) || 0) : 0,
       };
       applied.push({ bottleName: b.name, added: newUnits - current, unit: "units" });
     } else {
-      const currentOzMl = b.currentOz;
+      const currentOzMl = Number(b.currentOz) || 0;
       const addMl = toAdd / ML_TO_OZ; // toAdd en oz -> ml
+      const sizeMl = Number(b.size) || 750;
       const newCurrentOzMl = currentOzMl + addMl;
-      const sizeMl = b.size;
       const capped = Math.min(sizeMl, Math.max(0, newCurrentOzMl));
       updated[index] = { ...b, currentOz: capped };
       applied.push({ bottleName: b.name, added: toAdd, unit: "oz" });
@@ -98,17 +99,26 @@ export function applyOrderToInventory(bottles: Bottle[], rows: OrderRow[]): Appl
   return { updatedBottles: updated, applied, unmatched };
 }
 
+/** Obtiene la clave real del objeto (insensible a mayúsculas) que coincide con el patrón. */
+function getColumnKey(row: { [key: string]: unknown }, pattern: RegExp, fallbackIndex: number): string {
+  const keys = Object.keys(row);
+  const lower = keys.map((k) => k.toLowerCase());
+  const i = lower.findIndex((h) => pattern.test(h));
+  if (i !== -1) return keys[i];
+  return keys[Math.min(fallbackIndex, keys.length - 1)] ?? "";
+}
+
 /**
  * Convierte la primera hoja del Excel en filas de pedido (producto, cantidad a sumar).
+ * Acepta columnas "Producto"/"Nombre" y "Cantidad" (cualquier capitalización).
  */
 export function sheetToOrderRows(firstSheet: { [key: string]: unknown }[]): OrderRow[] {
   if (!firstSheet || firstSheet.length === 0) return [];
   const rows: OrderRow[] = [];
-  const headers = Object.keys(firstSheet[0] || {}).map((h) => String(h).toLowerCase());
+  const firstRow = firstSheet[0] || {};
 
-  const nameKey = headers.find((h) => /producto|nombre|item|articulo|descripcion|name|product|pedido/.test(h)) ?? headers[0];
-  const qtyKey =
-    headers.find((h) => /cantidad|sumar|agregar|entrada|qty|quantity|unidades|añadir|anadir/.test(h)) ?? headers[Math.min(1, headers.length - 1)];
+  const nameKey = getColumnKey(firstRow, /producto|nombre|item|articulo|descripcion|name|product|pedido/, 0);
+  const qtyKey = getColumnKey(firstRow, /cantidad|sumar|agregar|entrada|qty|quantity|unidades|añadir|anadir/, 1);
 
   for (const row of firstSheet) {
     const rawName = row[nameKey] ?? row[Object.keys(row)[0]];

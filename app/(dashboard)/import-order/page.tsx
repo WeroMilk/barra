@@ -110,10 +110,9 @@ export default function ImportOrderPage() {
       }
       setDetailRows(details);
 
-      const successMsg = `Pedido aplicado. ${result.applied.length} líneas sumadas al inventario.${result.unmatched.length > 0 ? ` ${result.unmatched.length} productos sin coincidencia.` : ""}`;
       setStatus("success");
-      setMessage(successMsg);
-      toast.show({ title: "Listo", message: successMsg, details, type: "success" });
+      setMessage("Pedido Agregado");
+      toast.show({ title: "Listo", message: "Pedido Agregado", type: "success" });
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Error al leer el archivo. ¿Es un Excel o CSV válido?";
       setStatus("error");

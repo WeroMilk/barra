@@ -5,7 +5,7 @@ import BottleDisplay from "@/components/Bar/BottleDisplay";
 import BottleThumbnail from "@/components/Bar/BottleThumbnail";
 import { categories } from "@/lib/bottlesData";
 import { loadBarBottles } from "@/lib/barStorage";
-import { getLastInventoryUpdate } from "@/lib/inventoryUpdate";
+import { getLastInventoryComplete, setLastInventoryComplete, LAST_INVENTORY_COMPLETE_EVENT } from "@/lib/lastInventoryComplete";
 import { Bottle } from "@/lib/types";
 import { movementsService, notificationsService } from "@/lib/movements";
 import { demoAuth } from "@/lib/demoAuth";
@@ -43,13 +43,13 @@ export default function BarPage() {
   const [inventoryActive, setInventoryActive] = useState(false);
   const [inventoryReviewedIds, setInventoryReviewedIds] = useState<Set<string>>(new Set());
   const inventoryCompletedRef = useRef(false);
-  const [lastInventory, setLastInventory] = useState("");
+  const [lastInventory, setLastInventory] = useState(() => getLastInventoryComplete());
 
   useEffect(() => {
-    const update = () => setLastInventory(getLastInventoryUpdate());
+    const update = () => setLastInventory(getLastInventoryComplete());
     update();
-    window.addEventListener("mibarra-inventory-update-changed", update);
-    return () => window.removeEventListener("mibarra-inventory-update-changed", update);
+    window.addEventListener(LAST_INVENTORY_COMPLETE_EVENT, update);
+    return () => window.removeEventListener(LAST_INVENTORY_COMPLETE_EVENT, update);
   }, []);
 
   useEffect(() => {
@@ -140,6 +140,7 @@ export default function BarPage() {
       description: `Inventario completo: ${total} botellas revisadas`,
     });
     notificationsService.incrementUnread();
+    setLastInventoryComplete();
   }, [inventoryActive, inventoryReviewedIds, displayBottles]);
 
   useEffect(() => {

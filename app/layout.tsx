@@ -58,7 +58,7 @@ export default function RootLayout({
                 };
                 var skip = function(msg) {
                   var s = (msg == null ? '' : toStr(msg)).toLowerCase();
-                  var cspEval = /content.security.policy|contentsecuritypolicy|csp.*eval|eval.*csp|script-src.*blocked|blocks the use of.*eval|blocks the use of.*javascript|violates the following directive|violated-directive|unsafe-eval|allow string evaluation|inline script injection|learn more.*content security policy|1 directive|source location.*directive.*status/i.test(s) || (s.indexOf('eval') !== -1 && (s.indexOf('block') !== -1 || s.indexOf('policy') !== -1 || s.indexOf('directive') !== -1 || s.indexOf('security') !== -1));
+                  var cspEval = /content.security.policy|content security policy|contentsecuritypolicy|csp.*eval|eval.*csp|script-src.*blocked|blocks the use of|blocks the use of.*eval|blocks the use of.*javascript|violates the following directive|violated-directive|unsafe-eval|allow string evaluation|inline script injection|learn more.*content security|to solve this issue|avoid using eval|new function\(\)|settimeout.*string|1 directive|source location|directive.*status|blocked.*eval|your site blocks/i.test(s) || (s.indexOf('eval') !== -1 && (s.indexOf('block') !== -1 || s.indexOf('policy') !== -1 || s.indexOf('directive') !== -1 || s.indexOf('security') !== -1 || s.indexOf('csp') !== -1));
                   return (
                     cspEval ||
                     /React DevTools|Download the React DevTools|Fast Refresh|preload.*layout\\.css|Modo DEMO|pol[ií]tica de seguridad/i.test(s) ||

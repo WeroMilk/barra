@@ -4,7 +4,8 @@ import { useState, useCallback } from "react";
 import { FileSpreadsheet, Upload, Download } from "lucide-react";
 import { applySalesToInventory, sheetToSalesRows, type SalesRow } from "@/lib/salesImport";
 import { loadBarBottles, saveBarBottles } from "@/lib/barStorage";
-import { setLastInventoryUpdate } from "@/lib/inventoryUpdate";
+import { setLastSaleImport } from "@/lib/lastSaleImport";
+import { addSalesFromImport } from "@/lib/salesReport";
 import { movementsService } from "@/lib/movements";
 import { demoAuth } from "@/lib/demoAuth";
 import { buildSalesOrderExcelTemplate, downloadSalesOrderTemplate } from "@/lib/excelTemplate";
@@ -97,14 +98,11 @@ export default function ImportSalesPage() {
       }
       saveBarBottles(result.updatedBottles);
       const now = new Date();
-      const dateStr = now.toLocaleString("es-ES", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-      setLastInventoryUpdate(dateStr);
+      addSalesFromImport(
+        result.applied.map((a) => ({ bottleName: a.bottleName, deducted: a.deducted, unit: a.unit })),
+        now
+      );
+      setLastSaleImport();
 
       movementsService.add({
         type: "sales_import",
@@ -123,10 +121,9 @@ export default function ImportSalesPage() {
       }
       setDetailRows(details);
 
-      const successMsg = `Archivo leído. ${result.applied.length} ventas aplicadas al inventario. Base de datos actualizada.`;
       setStatus("success");
-      setMessage(successMsg);
-      toast.show({ title: "Listo", message: successMsg, details, type: "success" });
+      setMessage("Venta Descontada");
+      toast.show({ title: "Listo", message: "Venta Descontada", type: "success" });
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Error al leer el archivo. ¿Es un Excel o CSV válido?";
       setStatus("error");

@@ -179,13 +179,13 @@ export default function SelectBottlesPage() {
           </div>
         </div>
 
-        {/* 3. Grid de boxes: en desktop centrado verticalmente (mismo espacio arriba/abajo); en móvil scroll si hace falta */}
+        {/* 3. Grid de boxes: en desktop mismo espacio arriba y abajo (entre categorías y línea gris); en móvil scroll si hace falta */}
         <div
-          className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden w-full md:overflow-y-hidden md:overflow-hidden md:flex md:flex-col md:justify-center"
+          className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden w-full md:overflow-y-hidden md:overflow-hidden md:flex md:flex-col md:justify-start"
           style={{ WebkitOverflowScrolling: "touch" }}
         >
           <div
-            className="max-w-6xl mx-auto px-2 min-[380px]:px-4 sm:px-5 md:px-6 w-full min-w-0 pb-[calc(200px+env(safe-area-inset-bottom,0px))] min-[380px]:pb-[calc(220px+env(safe-area-inset-bottom,0px))] sm:pb-[calc(240px+env(safe-area-inset-bottom,0px))] md:pb-0 md:py-4 pt-0.5 md:flex-shrink-0"
+            className="max-w-6xl mx-auto px-2 min-[380px]:px-4 sm:px-5 md:px-6 w-full min-w-0 pb-[calc(200px+env(safe-area-inset-bottom,0px))] min-[380px]:pb-[calc(220px+env(safe-area-inset-bottom,0px))] sm:pb-[calc(240px+env(safe-area-inset-bottom,0px))] md:pb-0 pt-0.5 md:pt-4 md:pb-4 md:flex-shrink-0"
           >
             {filteredBottles.length === 0 ? (
               <div className="text-center py-6 min-[380px]:py-8 px-4">
