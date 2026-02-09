@@ -95,5 +95,8 @@ export const movementsService = {
   clear: () => {
     movements = [];
     localStorage.removeItem("bottle-movements");
+    if (typeof window !== "undefined") {
+      notificationsService.markAsRead();
+    }
   },
 };

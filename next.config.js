@@ -7,9 +7,8 @@ const nextConfig = {
   async rewrites() {
     return [{ source: '/favicon.ico', destination: '/icon.svg' }];
   },
-  // En desarrollo: permitir eval para que webpack/Next no dispare el aviso de CSP en consola (consola limpia)
+  // CSP con unsafe-eval para que no aparezca el aviso de "blocks the use of eval" (dev y producción)
   async headers() {
-    if (process.env.NODE_ENV !== 'development') return [];
     return [
       {
         source: '/:path*',

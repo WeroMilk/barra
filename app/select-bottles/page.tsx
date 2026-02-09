@@ -13,24 +13,25 @@ import LogoutButton from "@/components/Auth/LogoutButton";
 import BottleCard from "@/components/SelectBottles/BottleCard";
 import { motion } from "framer-motion";
 
-/** Móvil muy pequeño: 6 | Móvil: 8 | Tablet: 8 | Desktop: 10 */
+/** Móvil muy pequeño: 6 | Móvil: 12 | Tablet: 10 | Desktop: 10 */
 function getItemsPerPage(width: number) {
   if (width < 400) return 6;
-  if (width < 768) return 8;
-  if (width < 1024) return 8; // tablet: 8 items para grid equilibrado (2 filas de 4)
-  return 10;
+  if (width < 768) return 12; // móvil: 12 por pantalla (2 cols × 6 filas)
+  if (width < 1024) return 10; // tablet
+  return 10; // desktop: 10 (5 cols × 2 filas)
 }
 
 export default function SelectBottlesPage() {
   const [selectedBottles, setSelectedBottles] = useState<Set<string>>(new Set());
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(() =>
+    typeof window !== "undefined" ? getItemsPerPage(window.innerWidth) : 10
+  );
   const router = useRouter();
 
   useEffect(() => {
-    const update = () => setItemsPerPage(getItemsPerPage(typeof window !== "undefined" ? window.innerWidth : 1024));
-    update();
+    const update = () => setItemsPerPage(getItemsPerPage(window.innerWidth));
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
   }, []);
@@ -178,21 +179,21 @@ export default function SelectBottlesPage() {
           </div>
         </div>
 
-        {/* 3. Grid de boxes: compacto en móvil para caber sin scroll en la mayoría de teléfonos */}
+        {/* 3. Grid de boxes: en desktop centrado verticalmente (mismo espacio arriba/abajo); en móvil scroll si hace falta */}
         <div
-          className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden w-full md:overflow-y-hidden md:overflow-hidden"
+          className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden w-full md:overflow-y-hidden md:overflow-hidden md:flex md:flex-col md:justify-center"
           style={{ WebkitOverflowScrolling: "touch" }}
         >
           <div
-            className="max-w-6xl mx-auto px-2 min-[380px]:px-4 sm:px-5 md:px-6 w-full min-w-0 pb-[calc(200px+env(safe-area-inset-bottom,0px))] min-[380px]:pb-[calc(220px+env(safe-area-inset-bottom,0px))] sm:pb-[calc(240px+env(safe-area-inset-bottom,0px))] md:pb-[calc(260px+env(safe-area-inset-bottom,0px))] pt-0.5"
+            className="max-w-6xl mx-auto px-2 min-[380px]:px-4 sm:px-5 md:px-6 w-full min-w-0 pb-[calc(200px+env(safe-area-inset-bottom,0px))] min-[380px]:pb-[calc(220px+env(safe-area-inset-bottom,0px))] sm:pb-[calc(240px+env(safe-area-inset-bottom,0px))] md:pb-0 md:py-4 pt-0.5 md:flex-shrink-0"
           >
             {filteredBottles.length === 0 ? (
               <div className="text-center py-6 min-[380px]:py-8 px-4">
                 <p className="text-xs min-[380px]:text-sm text-apple-text2">No hay botellas en esta categoría</p>
               </div>
             ) : (
-              <div className="w-full min-w-0">
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1 min-[380px]:gap-1.5 sm:gap-2 md:gap-3 lg:gap-4 w-full min-w-0 [grid-auto-rows:minmax(98px,1fr)] min-[380px]:[grid-auto-rows:minmax(106px,1fr)] sm:[grid-auto-rows:minmax(118px,1fr)] md:[grid-auto-rows:minmax(132px,1fr)] lg:[grid-auto-rows:minmax(148px,1fr)]">
+              <div className="w-full min-w-0 flex justify-center">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1 min-[380px]:gap-1.5 sm:gap-2 md:gap-3 lg:gap-4 w-full max-w-5xl min-w-0 [grid-auto-rows:minmax(98px,1fr)] min-[380px]:[grid-auto-rows:minmax(106px,1fr)] sm:[grid-auto-rows:minmax(118px,1fr)] md:[grid-auto-rows:minmax(132px,1fr)] lg:[grid-auto-rows:minmax(148px,1fr)]">
                   {paginatedBottles.map((bottle, index) => (
                     <motion.div
                       key={bottle.id}

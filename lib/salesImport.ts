@@ -120,22 +120,29 @@ export function applySalesToInventory(options: ApplySalesOptions): ApplySalesRes
 
     if (useUnits) {
       const current = b.currentUnits ?? 0;
-      const newUnits = Math.max(0, current - Math.round(toDeduct));
-      const capacity = b.sizeUnits ?? 100;
+      const safeCurrent = Number.isFinite(Number(current)) ? Number(current) : 0;
+      const toDeductRounded = Math.round(toDeduct);
+      const newUnits = Math.max(0, safeCurrent - toDeductRounded);
+      const actualDeducted = safeCurrent - newUnits;
+      const capacity = Number(b.sizeUnits) || 100;
+      const sizeMl = Number(b.size) || 750;
       updated[index] = {
         ...b,
         currentUnits: newUnits,
-        currentOz: capacity > 0 ? (newUnits / capacity) * b.size : 0,
+        currentOz: capacity > 0 ? (newUnits / capacity) * sizeMl : 0,
       };
-      applied.push({ bottleName: b.name, deducted: toDeduct, unit: "units", matched: true });
+      applied.push({ bottleName: b.name, deducted: actualDeducted, unit: "units", matched: true });
     } else {
-      const currentOz = b.currentOz * ML_TO_OZ;
-      const newOz = Math.max(0, currentOz - toDeduct);
+      const currentOzMl = Number(b.currentOz);
+      const safeOzMl = Number.isFinite(currentOzMl) ? currentOzMl : 0;
+      const currentOz = safeOzMl * ML_TO_OZ;
+      const toDeductCapped = Math.min(toDeduct, currentOz);
+      const newOz = Math.max(0, currentOz - toDeductCapped);
       updated[index] = {
         ...b,
         currentOz: newOz / ML_TO_OZ,
       };
-      applied.push({ bottleName: b.name, deducted: toDeduct, unit: "oz", matched: true });
+      applied.push({ bottleName: b.name, deducted: toDeductCapped, unit: "oz", matched: true });
     }
   }
 

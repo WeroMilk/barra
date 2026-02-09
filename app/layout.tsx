@@ -58,13 +58,14 @@ export default function RootLayout({
                 };
                 var skip = function(msg) {
                   var s = (msg == null ? '' : toStr(msg)).toLowerCase();
+                  var cspEval = /content.security.policy|contentsecuritypolicy|csp.*eval|eval.*csp|script-src.*blocked|blocks the use of.*eval|blocks the use of.*javascript|violates the following directive|violated-directive|unsafe-eval|allow string evaluation|inline script injection|learn more.*content security policy|1 directive|source location.*directive.*status/i.test(s) || (s.indexOf('eval') !== -1 && (s.indexOf('block') !== -1 || s.indexOf('policy') !== -1 || s.indexOf('directive') !== -1 || s.indexOf('security') !== -1));
                   return (
-                    /React DevTools|Download the React DevTools|Fast Refresh|preload.*layout\\.css|Modo DEMO|content security policy|contentsecuritypolicy|script-src|blocks the use of|violates the following directive|violated-directive|eval.*blocked|blocked.*eval|pol[ií]tica de seguridad|unsafe-eval|allow string evaluation|inline script injection/i.test(s) ||
+                    cspEval ||
+                    /React DevTools|Download the React DevTools|Fast Refresh|preload.*layout\\.css|Modo DEMO|pol[ií]tica de seguridad/i.test(s) ||
                     /ERR_EMPTY_RESPONSE|Failed to load resource|net::|Load failed|ResizeObserver loop|ChunkLoadError|Loading chunk \\d+ failed|Dynamic server usage/i.test(s) ||
                     /Hydration|Text content does not match|Did not expect server HTML|Minified React error|Warning: .* did not match/i.test(s) ||
                     /\\[HMR\\]|Hot Module Replacement|react-refresh|webpack.*warn|Source map/i.test(s) ||
-                    /favicon\\.ico|manifest\\.webmanifest|sw\\.js|service worker|Failed to load resource/i.test(s) ||
-                    (s.indexOf('eval') !== -1 && (s.indexOf('block') !== -1 || s.indexOf('policy') !== -1 || s.indexOf('directive') !== -1))
+                    /favicon\\.ico|manifest\\.webmanifest|sw\\.js|service worker|Failed to load resource/i.test(s)
                   );
                 };
                 var filter = function(orig) {

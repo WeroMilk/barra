@@ -1,7 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
   <rect width="32" height="32" rx="8" fill="#1D1D1F"/>
-  <!-- Silueta botella: limpia y reconocible a 16px -->
-  <path d="M12 5h8v2.5h-2v2c2.5.4 4 1.6 4 3.5v13c0 1.4-1.1 2.5-2.5 2.5h-7c-1.4 0-2.5-1.1-2.5-2.5V13c0-1.9 1.5-3.1 4-3.5V7.5h-2V5z" fill="#E67E22"/>
-  <!-- Brillos sutiles -->
-  <path d="M14 8v1.5h1.5V8H14zm.5 3.5h2.5c.3 0 .5.2.5.5v10h-3.5V12c0-.3.2-.5.5-.5z" fill="#fff" fill-opacity="0.2"/>
+  <!-- Coctelera (shaker de bartender): silueta reconocible -->
+  <path d="M16 3.5l1.2-1.2 1.2 1.2v2.5h-2.4V3.5zM13 7h6v2h-1.2l-.5 8H22v2H10v-2h4.7l-.5-8H13V7zm-2.2 10H8v6c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-6h-2.8l-.4 6h-8.4l-.4-6z" fill="#E67E22"/>
+  <path d="M12.5 9h1v8h-1V9zm6 0h1v7h-1V9z" fill="#fff" fill-opacity="0.25"/>
 </svg>

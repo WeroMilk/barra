@@ -12,7 +12,7 @@ export const DEMO_USERS: DemoUser[] = [
   {
     email: "demo@mibarra.com",
     password: "demo123",
-    name: "Usuario Demo",
+    name: "Gerente",
     barName: "Bar El Patrón",
   },
 ];

@@ -7,7 +7,7 @@ La aplicación está funcionando en **modo DEMO** (sin Firebase configurado). Pu
 ### Usuario de Prueba
 - **Email:** `demo@mibarra.com`
 - **Contraseña:** `demo123`
-- **Nombre:** Usuario Demo
+- **Nombre:** Gerente
 
 ### Contraseña de Gerente
 - **Contraseña:** `gerente123` (para editar inventario, cambiar porciones, etc.)

@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { Package, Upload, CheckCircle, AlertCircle, Download } from "lucide-react";
+import { Package, Upload, Download } from "lucide-react";
 import { loadBarBottles, saveBarBottles } from "@/lib/barStorage";
 import { applyOrderToInventory, sheetToOrderRows } from "@/lib/orderImport";
 import { buildSalesOrderExcelTemplate, downloadSalesOrderTemplate } from "@/lib/excelTemplate";
 import { setLastInventoryUpdate } from "@/lib/inventoryUpdate";
 import { movementsService } from "@/lib/movements";
 import { demoAuth } from "@/lib/demoAuth";
+import { useToast } from "@/components/Toast/ToastContext";
 
 export default function ImportOrderPage() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -16,12 +17,15 @@ export default function ImportOrderPage() {
   const [unmatchedCount, setUnmatchedCount] = useState(0);
   const [detailRows, setDetailRows] = useState<string[]>([]);
   const [templateLoading, setTemplateLoading] = useState(false);
+  const toast = useToast();
 
   const handleDownloadTemplate = useCallback(async () => {
     const bottles = loadBarBottles();
     if (bottles.length === 0) {
-      setMessage("Primero configura tu inventario en Configuración → Selecciona tu inventario.");
+      const msg = "Primero configura tu inventario en Configuración → Selecciona tu inventario.";
+      setMessage(msg);
       setStatus("error");
+      toast.show({ title: "Error", message: msg, type: "error" });
       return;
     }
     setTemplateLoading(true);
@@ -29,12 +33,14 @@ export default function ImportOrderPage() {
       const blob = await buildSalesOrderExcelTemplate(bottles);
       downloadSalesOrderTemplate(blob, "plantilla-ingreso-pedido.xlsx");
     } catch (e) {
-      setMessage("No se pudo generar la plantilla. Intenta de nuevo.");
+      const msg = "No se pudo generar la plantilla. Intenta de nuevo.";
+      setMessage(msg);
       setStatus("error");
+      toast.show({ title: "Error", message: msg, type: "error" });
     } finally {
       setTemplateLoading(false);
     }
-  }, []);
+  }, [toast]);
 
   const processFile = useCallback(async (file: File) => {
     setStatus("loading");
@@ -47,8 +53,10 @@ export default function ImportOrderPage() {
       const workbook = XLSX.read(data, { type: "array" });
       const firstSheetName = workbook.SheetNames[0];
       if (!firstSheetName) {
+        const msg = "El archivo no tiene hojas.";
         setStatus("error");
-        setMessage("El archivo no tiene hojas.");
+        setMessage(msg);
+        toast.show({ title: "Error", message: msg, type: "error" });
         return;
       }
       const sheet = workbook.Sheets[firstSheetName];
@@ -56,15 +64,19 @@ export default function ImportOrderPage() {
 
       const orderRows = sheetToOrderRows(json);
       if (orderRows.length === 0) {
+        const msg = "Archivo leído. No se encontraron filas de pedido (revisa columnas 'producto/nombre' y 'cantidad').";
         setStatus("success");
-        setMessage("Archivo leído. No se encontraron filas de pedido (revisa columnas 'producto/nombre' y 'cantidad').");
+        setMessage(msg);
+        toast.show({ title: "Listo", message: msg, type: "success" });
         return;
       }
 
       const bottles = loadBarBottles();
       if (bottles.length === 0) {
+        const msg = "No hay inventario. Configura las botellas en Configuración → Selecciona tu inventario.";
         setStatus("error");
-        setMessage("No hay inventario. Configura las botellas en Configuración → Selecciona tu inventario.");
+        setMessage(msg);
+        toast.show({ title: "Error", message: msg, type: "error" });
         return;
       }
 
@@ -92,22 +104,23 @@ export default function ImportOrderPage() {
 
       setAppliedCount(result.applied.length);
       setUnmatchedCount(result.unmatched.length);
-      setDetailRows(
-        result.applied.slice(0, 15).map((a) => `${a.bottleName}: +${a.added.toFixed(a.unit === "oz" ? 1 : 0)} ${a.unit}`)
-      );
+      const details = result.applied.slice(0, 15).map((a) => `${a.bottleName}: +${a.added.toFixed(a.unit === "oz" ? 1 : 0)} ${a.unit}`);
       if (result.unmatched.length > 0) {
-        setDetailRows((prev) => [...prev, `Sin match: ${result.unmatched.slice(0, 5).join(", ")}${result.unmatched.length > 5 ? "…" : ""}`]);
+        details.push(`Sin match: ${result.unmatched.slice(0, 5).join(", ")}${result.unmatched.length > 5 ? "…" : ""}`);
       }
+      setDetailRows(details);
 
+      const successMsg = `Pedido aplicado. ${result.applied.length} líneas sumadas al inventario.${result.unmatched.length > 0 ? ` ${result.unmatched.length} productos sin coincidencia.` : ""}`;
       setStatus("success");
-      setMessage(
-        `Pedido aplicado. ${result.applied.length} líneas sumadas al inventario.${result.unmatched.length > 0 ? ` ${result.unmatched.length} productos sin coincidencia.` : ""}`
-      );
+      setMessage(successMsg);
+      toast.show({ title: "Listo", message: successMsg, details, type: "success" });
     } catch (err) {
+      const msg = err instanceof Error ? err.message : "Error al leer el archivo. ¿Es un Excel o CSV válido?";
       setStatus("error");
-      setMessage(err instanceof Error ? err.message : "Error al leer el archivo. ¿Es un Excel o CSV válido?");
+      setMessage(msg);
+      toast.show({ title: "Error", message: msg, type: "error" });
     }
-  }, []);
+  }, [toast]);
 
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
@@ -172,30 +185,6 @@ export default function ImportOrderPage() {
           <div className="flex items-center gap-2 text-apple-text2">
             <span className="inline-block w-4 h-4 border-2 border-apple-accent border-t-transparent rounded-full animate-spin" />
             Leyendo archivo…
-          </div>
-        )}
-
-        {status === "success" && (
-          <div className="bg-green-50 border border-green-200 rounded-xl p-4 space-y-2">
-            <div className="flex items-center gap-2 text-green-800">
-              <CheckCircle className="w-5 h-5 flex-shrink-0" />
-              <span className="font-medium">Listo</span>
-            </div>
-            <p className="text-sm text-green-700">{message}</p>
-            {detailRows.length > 0 && (
-              <ul className="text-xs text-green-700 list-disc list-inside space-y-0.5 max-h-40 overflow-y-auto">
-                {detailRows.map((line, i) => (
-                  <li key={i}>{line}</li>
-                ))}
-              </ul>
-            )}
-          </div>
-        )}
-
-        {status === "error" && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-2">
-            <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-            <p className="text-sm text-red-700">{message}</p>
           </div>
         )}
 

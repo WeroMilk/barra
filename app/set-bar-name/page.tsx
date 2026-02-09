@@ -38,7 +38,7 @@ export default function SetBarNamePage() {
   return (
     <AuthGuard>
       <div
-        className="relative min-h-[100dvh] min-h-screen bg-apple-bg p-4 flex items-start justify-center pt-12 sm:pt-16 md:pt-20 safe-area-x overflow-hidden"
+        className="relative min-h-[100dvh] min-h-screen bg-apple-bg p-4 flex items-center justify-center safe-area-x overflow-hidden"
         style={{ paddingTop: "env(safe-area-inset-top, 0px)", paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
       >
         {/* Sombras naranjas con blur (mismo efecto que login) */}
@@ -51,14 +51,14 @@ export default function SetBarNamePage() {
           <div className="login-orb-6 absolute w-[min(65vw,270px)] h-[min(65vw,270px)] rounded-full bg-[#D35400] opacity-[0.12] blur-[85px] right-[25%] top-[10%]" />
         </div>
 
-        <div className="relative z-10 max-w-md w-full">
+        <div className="relative z-10 max-w-md w-full -mt-12">
           <div className="bg-apple-surface/95 backdrop-blur-sm rounded-3xl shadow-xl border border-apple-border p-6 sm:p-8 relative">
             <div className="absolute top-4 right-4">
               <LogoutButton showText={false} />
             </div>
 
             <div className="text-center mb-6">
-              <h1 className="text-2xl sm:text-3xl font-semibold text-apple-text mb-2">
+              <h1 className="text-2xl sm:text-3xl font-semibold text-apple-accent mb-2">
                 Nombre de tu bar
               </h1>
               <p className="text-apple-text2 text-sm">

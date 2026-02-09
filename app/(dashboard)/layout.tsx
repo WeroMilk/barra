@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import AuthGuard from "@/components/Auth/AuthGuard";
 import DashboardHeader from "@/components/Dashboard/DashboardHeader";
 import DashboardFooter from "@/components/Dashboard/DashboardFooter";
+import { ToastProvider } from "@/components/Toast/ToastContext";
 import { notificationsService } from "@/lib/movements";
 
 export default function DashboardLayout({
@@ -22,6 +23,7 @@ export default function DashboardLayout({
 
   return (
     <AuthGuard>
+      <ToastProvider>
       <div
         className="bg-apple-bg flex flex-col overflow-hidden w-full max-w-[100vw] safe-area-x"
         style={{
@@ -38,6 +40,7 @@ export default function DashboardLayout({
         </main>
         <DashboardFooter />
       </div>
+      </ToastProvider>
     </AuthGuard>
   );
 }
