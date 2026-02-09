@@ -38,7 +38,7 @@ export default function SetBarNamePage() {
   return (
     <AuthGuard>
       <div
-        className="relative min-h-[100dvh] min-h-screen bg-apple-bg p-4 flex items-center justify-center safe-area-x overflow-hidden"
+        className="relative min-h-[100dvh] min-h-screen bg-apple-bg p-4 flex items-start justify-center pt-12 sm:pt-16 md:pt-20 safe-area-x overflow-hidden"
         style={{ paddingTop: "env(safe-area-inset-top, 0px)", paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
       >
         {/* Sombras naranjas con blur (mismo efecto que login) */}

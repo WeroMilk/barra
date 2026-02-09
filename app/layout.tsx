@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   description: "Control de inventario de botellas y cervezas",
   icons: { icon: "/icon.svg", shortcut: "/icon.svg", apple: "/icon.svg" },
   manifest: "/manifest.webmanifest",
-  appleWebApp: { capable: true, title: "MiBarra" },
+  other: { "mobile-web-app-capable": "yes" },
 };
 
 export default function RootLayout({
@@ -41,22 +41,42 @@ export default function RootLayout({
   return (
     <html lang="es" className="h-full w-full overflow-hidden">
       <body className={`${inter.variable} ${poppins.variable} font-sans h-full w-full overflow-hidden`}>
-        {/* Suprimir mensajes de desarrollo y ruido en consola */}
+        {/* Filtro de consola (primer nodo en body) para deploy/consola limpia */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 if (typeof window === 'undefined') return;
                 var oLog = console.log, oWarn = console.warn, oInfo = console.info, oError = console.error;
-                var skip = function(msg) {
-                  if (typeof msg !== 'string') return false;
-                  var s = msg.toLowerCase();
-                  return /React DevTools|Fast Refresh|preload.*layout\\.css|Modo DEMO|content security policy|contentsecuritypolicy|csp|unsafe-eval|script-src|ERR_EMPTY_RESPONSE|Failed to load resource|blocks the use of|violates the following directive|violated-directive|eval.*blocked|blocked.*eval|pol[ií]tica de seguridad/i.test(msg) || s.indexOf('eval') !== -1 && (s.indexOf('block') !== -1 || s.indexOf('policy') !== -1 || s.indexOf('directive') !== -1);
+                var toStr = function(a) {
+                  if (typeof a === 'string') return a;
+                  if (a != null && typeof a === 'object') try { return JSON.stringify(a); } catch (e) { return String(a); }
+                  return String(a);
                 };
-                console.log = function() { if (!skip(arguments[0])) oLog.apply(console, arguments); };
-                console.warn = function() { if (!skip(arguments[0])) oWarn.apply(console, arguments); };
-                console.info = function() { if (!skip(arguments[0])) oInfo.apply(console, arguments); };
-                console.error = function() { if (!skip(arguments[0])) oError.apply(console, arguments); };
+                var fullMsg = function(args) {
+                  return Array.prototype.slice.call(args).map(toStr).join(' ');
+                };
+                var skip = function(msg) {
+                  var s = (msg == null ? '' : toStr(msg)).toLowerCase();
+                  return (
+                    /React DevTools|Download the React DevTools|Fast Refresh|preload.*layout\\.css|Modo DEMO|content security policy|contentsecuritypolicy|script-src|blocks the use of|violates the following directive|violated-directive|eval.*blocked|blocked.*eval|pol[ií]tica de seguridad|unsafe-eval|allow string evaluation|inline script injection/i.test(s) ||
+                    /ERR_EMPTY_RESPONSE|Failed to load resource|net::|Load failed|ResizeObserver loop|ChunkLoadError|Loading chunk \\d+ failed|Dynamic server usage/i.test(s) ||
+                    /Hydration|Text content does not match|Did not expect server HTML|Minified React error|Warning: .* did not match/i.test(s) ||
+                    /\\[HMR\\]|Hot Module Replacement|react-refresh|webpack.*warn|Source map/i.test(s) ||
+                    /favicon\\.ico|manifest\\.webmanifest|sw\\.js|service worker|Failed to load resource/i.test(s) ||
+                    (s.indexOf('eval') !== -1 && (s.indexOf('block') !== -1 || s.indexOf('policy') !== -1 || s.indexOf('directive') !== -1))
+                  );
+                };
+                var filter = function(orig) {
+                  return function() {
+                    if (skip(fullMsg(arguments))) return;
+                    orig.apply(console, arguments);
+                  };
+                };
+                console.log = filter(oLog);
+                console.warn = filter(oWarn);
+                console.info = filter(oInfo);
+                console.error = filter(oError);
               })();
             `,
           }}

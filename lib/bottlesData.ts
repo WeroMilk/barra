@@ -19,17 +19,17 @@ const bottle = (id: string, name: string, category: string, sizeMl: number, curr
   name,
   category,
   size: sizeMl,
-  currentOz: currentMl ?? Math.round(sizeMl * 0.7),
+  currentOz: currentMl ?? 0,
   sizeUnits,
   currentUnits,
 });
 
 // Aplicar unidades a todas las botellas (cerveza = por unidades, resto = 1 botella)
 const withUnits = (list: Bottle[]): Bottle[] =>
-  list.map((b, i) => {
+  list.map((b) => {
     const isCerveza = b.category.toLowerCase() === "cerveza";
     const sizeU = b.sizeUnits ?? (isCerveza ? 24 : 1);
-    const currentU = b.currentUnits ?? (isCerveza ? Math.max(0, sizeU - (i % 10)) : 1);
+    const currentU = b.currentUnits ?? 0;
     return { ...b, sizeUnits: sizeU, currentUnits: currentU };
   });
 

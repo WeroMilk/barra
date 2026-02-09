@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { EMPLOYEES } from "@/lib/employeeAuth";
-import { getLastInventoryUpdate, setLastInventoryUpdate } from "@/lib/inventoryUpdate";
-import { movementsService } from "@/lib/movements";
+import { employeeAuth } from "@/lib/employeeAuth";
+import type { Employee } from "@/lib/employeeAuth";
+import { movementsService, notificationsService } from "@/lib/movements";
 import { demoAuth } from "@/lib/demoAuth";
 import { loadBarBottles } from "@/lib/barStorage";
 import { buildOrderReport } from "@/lib/orderReport";
-import { Lock, Calendar, Package, ShoppingCart, Download, MessageCircle } from "lucide-react";
+import { Lock, Package, ShoppingCart, Download, MessageCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const WHATSAPP_RECIPIENTS = [
@@ -21,15 +21,16 @@ function extractPhone(value: string): string {
 }
 
 export default function ConfigPage() {
-  const [lastUpdate, setLastUpdate] = useState("");
+  const [employees, setEmployees] = useState<Employee[]>(() => employeeAuth.getEmployees());
   const [showPassword, setShowPassword] = useState(false);
+  const [editingPassword, setEditingPassword] = useState<Record<string, string>>({});
   const [showOrderModal, setShowOrderModal] = useState(false);
-  const [orderReportText, setOrderReportText] = useState("");
-  const [orderRecipient, setOrderRecipient] = useState(WHATSAPP_RECIPIENTS[0]?.value ?? "");
 
   useEffect(() => {
-    setLastUpdate(getLastInventoryUpdate());
+    setEmployees(employeeAuth.getEmployees());
   }, []);
+  const [orderReportText, setOrderReportText] = useState("");
+  const [orderRecipient, setOrderRecipient] = useState(WHATSAPP_RECIPIENTS[0]?.value ?? "");
 
   const handleGenerateOrder = () => {
     const bottles = loadBarBottles();
@@ -61,115 +62,124 @@ export default function ConfigPage() {
     setShowOrderModal(false);
   };
 
-  const handleSaveLastUpdate = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (lastUpdate.trim()) {
-      setLastInventoryUpdate(lastUpdate.trim());
-      movementsService.add({
-        type: "last_update_date",
-        bottleId: "_",
-        bottleName: "Configuración",
-        newValue: 0,
-        userName: demoAuth.getCurrentUser()?.name ?? "Usuario",
-        description: `Fecha de última actualización del inventario: ${lastUpdate.trim()}`,
-      });
-      alert("Fecha de última actualización guardada.");
+  const handlePasswordChange = (emp: Employee, newPassword: string) => {
+    const trimmed = newPassword.trim();
+    if (!trimmed) {
+      alert("La contraseña no puede estar vacía.");
+      return;
     }
+    const previousPassword = emp.password;
+    if (trimmed === previousPassword) {
+      setEditingPassword((prev) => {
+        const next = { ...prev };
+        delete next[emp.id];
+        return next;
+      });
+      return;
+    }
+    employeeAuth.setEmployeePassword(emp.id, trimmed);
+    setEmployees(employeeAuth.getEmployees());
+    setEditingPassword((prev) => {
+      const next = { ...prev };
+      delete next[emp.id];
+      return next;
+    });
+    movementsService.add({
+      type: "employee_password_change",
+      bottleId: "_",
+      bottleName: "Configuración",
+      newValue: 0,
+      userName: demoAuth.getCurrentUser()?.name ?? "Usuario",
+      description: `Contraseña de «${emp.label}» actualizada`,
+    });
+    notificationsService.incrementUnread();
   };
 
   return (
     <div className="h-full min-h-0 flex flex-col overflow-hidden">
-      <div className="flex-1 min-h-0 overflow-y-auto flex flex-col items-center px-4 py-2 sm:py-3">
-        <div className="w-full max-w-lg flex flex-col gap-2 sm:gap-2.5 flex-shrink-0">
+      <div className="flex-1 min-h-0 overflow-y-auto flex flex-col items-center px-4 py-3 sm:py-4">
+        <div className="w-full max-w-xl flex flex-col gap-4 sm:gap-5 flex-shrink-0">
           <div className="flex-shrink-0">
-            <h2 className="text-base sm:text-lg font-semibold text-apple-text">Configuraciones</h2>
-            <p className="text-[11px] sm:text-xs text-apple-text2">Ajustes del bar y contraseñas de empleados.</p>
+            <h2 className="text-lg sm:text-xl font-semibold text-apple-text">Configuraciones</h2>
+            <p className="text-xs sm:text-sm text-apple-text2 mt-0.5">Ajustes del bar y contraseñas de empleados.</p>
           </div>
 
           {/* Contraseña de empleado */}
-          <section className="bg-apple-surface rounded-xl border border-apple-border p-2 sm:p-2.5 flex-shrink-0">
-            <div className="flex items-center gap-1.5 mb-1">
-              <Lock className="w-3.5 h-3.5 text-apple-accent flex-shrink-0" />
-              <h3 className="font-semibold text-apple-text text-xs sm:text-sm">Contraseña de empleado</h3>
+          <section className="bg-apple-surface rounded-2xl border border-apple-border p-4 sm:p-5 flex-shrink-0">
+            <div className="flex items-center gap-2 mb-2">
+              <Lock className="w-5 h-5 text-apple-accent flex-shrink-0" />
+              <h3 className="font-semibold text-apple-text text-sm sm:text-base">Contraseña de empleado</h3>
             </div>
-            <p className="text-[11px] text-apple-text2 mb-1.5 leading-snug">
-              Cada empleado tiene contraseña. En Mi Barra queda registrado en Movimientos.
+            <p className="text-xs sm:text-sm text-apple-text2 mb-3 leading-snug">
+              Cada empleado tiene contraseña. Puedes editarla aquí; en MiBarra queda registrado en Movimientos quién realizó cada cambio.
             </p>
-            <div className="space-y-1">
-              {EMPLOYEES.map((emp) => (
-                <div key={emp.id} className="flex items-center justify-between gap-2 px-2 py-1 bg-apple-bg rounded-lg border border-apple-border">
-                  <span className="text-[11px] sm:text-xs font-medium text-apple-text">{emp.label}</span>
-                  <code className="text-[11px] font-mono text-apple-text2">
-                    {showPassword ? emp.password : "••••••••"}
-                  </code>
+            <div className="space-y-3">
+              {employees.map((emp) => (
+                <div key={emp.id} className="px-3 py-3 bg-apple-bg rounded-xl border border-apple-border space-y-2">
+                  <span className="text-sm font-medium text-apple-text block">{emp.label}</span>
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      value={editingPassword[emp.id] ?? emp.password}
+                      onChange={(e) =>
+                        setEditingPassword((prev) => ({ ...prev, [emp.id]: e.target.value }))
+                      }
+                      placeholder="Contraseña"
+                      className="flex-1 min-w-0 px-3 py-2 bg-apple-surface border border-apple-border rounded-lg text-sm font-mono text-apple-text placeholder-apple-text2 focus:outline-none focus:ring-2 focus:ring-apple-accent"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handlePasswordChange(emp, editingPassword[emp.id] ?? emp.password)}
+                      className="px-3 py-2 bg-apple-accent text-white text-sm font-medium rounded-lg hover:opacity-90 flex-shrink-0"
+                    >
+                      Guardar
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="mt-1.5 w-full px-2 py-1 text-[11px] sm:text-xs bg-apple-accent text-white rounded-lg hover:opacity-90"
+              className="mt-3 w-full px-4 py-2.5 text-sm bg-apple-accent text-white rounded-xl hover:opacity-90 font-medium"
             >
               {showPassword ? "Ocultar contraseñas" : "Ver contraseñas"}
             </button>
           </section>
 
-          {/* Última actualización del inventario */}
-          <section className="bg-apple-surface rounded-xl border border-apple-border p-2 sm:p-2.5 flex-shrink-0">
-            <div className="flex items-center gap-1.5 mb-1">
-              <Calendar className="w-3.5 h-3.5 text-apple-accent flex-shrink-0" />
-              <h3 className="font-semibold text-apple-text text-xs sm:text-sm">Última actualización del inventario</h3>
-            </div>
-            <p className="text-[11px] text-apple-text2 mb-1.5">Fecha en el footer (ej. última carga Excel).</p>
-            <form onSubmit={handleSaveLastUpdate} className="flex flex-col sm:flex-row gap-1.5">
-              <input
-                id="config-last-update"
-                name="lastInventoryUpdate"
-                type="text"
-                value={lastUpdate}
-                onChange={(e) => setLastUpdate(e.target.value)}
-                placeholder="Ej: 8/02/2026 11:45 am"
-                className="flex-1 min-w-0 px-2 py-1.5 bg-apple-bg border border-apple-border rounded-lg text-xs sm:text-sm text-apple-text placeholder-apple-text2 focus:outline-none focus:ring-2 focus:ring-apple-accent"
-              />
-              <button type="submit" className="px-3 py-1.5 bg-apple-accent text-white rounded-lg hover:opacity-90 text-[11px] sm:text-xs font-medium flex-shrink-0">
-                Guardar
-              </button>
-            </form>
-          </section>
-
           {/* Generar pedido */}
-          <section className="bg-apple-surface rounded-xl border border-apple-border p-2 sm:p-2.5 flex-shrink-0">
-            <div className="flex items-center gap-1.5 mb-1">
-              <ShoppingCart className="w-3.5 h-3.5 text-apple-accent flex-shrink-0" />
-              <h3 className="font-semibold text-apple-text text-xs sm:text-sm">Generar pedido</h3>
+          <section className="bg-apple-surface rounded-2xl border border-apple-border p-4 sm:p-5 flex-shrink-0">
+            <div className="flex items-center gap-2 mb-2">
+              <ShoppingCart className="w-5 h-5 text-apple-accent flex-shrink-0" />
+              <h3 className="font-semibold text-apple-text text-sm sm:text-base">Generar pedido</h3>
             </div>
-            <p className="text-[11px] text-apple-text2 mb-1.5 leading-snug">
+            <p className="text-xs sm:text-sm text-apple-text2 mb-3 leading-snug">
               Genera un texto con lo que falta por pedir (unidades) y las botellas por debajo del 25%. Envíalo por WhatsApp al encargado de compras para mantener la barra surtida.
             </p>
             <button
               type="button"
               onClick={handleGenerateOrder}
-              className="inline-flex items-center justify-center gap-1.5 w-full sm:w-auto px-3 py-2 bg-apple-accent text-white text-xs sm:text-sm font-medium rounded-xl hover:opacity-90 transition-opacity"
+              className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-3 bg-apple-accent text-white text-sm font-medium rounded-xl hover:opacity-90 transition-opacity"
             >
-              <ShoppingCart className="w-3.5 h-3.5" />
+              <ShoppingCart className="w-4 h-4" />
               Generar pedido
             </button>
           </section>
 
           {/* Mi inventario */}
-          <section className="bg-apple-surface rounded-xl border border-apple-border p-2 sm:p-2.5 flex-shrink-0">
-            <div className="flex items-center gap-1.5 mb-1">
-              <Package className="w-3.5 h-3.5 text-apple-accent flex-shrink-0" />
-              <h3 className="font-semibold text-apple-text text-xs sm:text-sm">Mi inventario</h3>
+          <section className="bg-apple-surface rounded-2xl border border-apple-border p-4 sm:p-5 flex-shrink-0">
+            <div className="flex items-center gap-2 mb-2">
+              <Package className="w-5 h-5 text-apple-accent flex-shrink-0" />
+              <h3 className="font-semibold text-apple-text text-sm sm:text-base">Mi inventario</h3>
             </div>
-            <p className="text-[11px] text-apple-text2 mb-1.5 leading-snug">
+            <p className="text-xs sm:text-sm text-apple-text2 mb-3 leading-snug">
               Las bebidas que elijas aparecen en Mi Barra. Añade o quita botellas cuando quieras.
             </p>
             <Link
               href="/select-bottles"
-              className="inline-flex items-center justify-center gap-1.5 w-full sm:w-auto px-3 py-2 bg-apple-accent text-white text-xs sm:text-sm font-medium rounded-xl hover:opacity-90 transition-opacity"
+              className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-3 bg-apple-accent text-white text-sm font-medium rounded-xl hover:opacity-90 transition-opacity"
             >
-              <Package className="w-3.5 h-3.5" />
+              <Package className="w-4 h-4" />
               Selecciona tu inventario
             </Link>
           </section>

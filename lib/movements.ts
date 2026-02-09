@@ -6,6 +6,7 @@ export type MovementType =
   | "portion_change"
   | "inventory_list_updated"
   | "bar_name_change"
+  | "employee_password_change"
   | "last_update_date"
   | "sales_import"
   | "order_import"

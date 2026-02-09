@@ -7,6 +7,21 @@ const nextConfig = {
   async rewrites() {
     return [{ source: '/favicon.ico', destination: '/icon.svg' }];
   },
+  // En desarrollo: permitir eval para que webpack/Next no dispare el aviso de CSP en consola (consola limpia)
+  async headers() {
+    if (process.env.NODE_ENV !== 'development') return [];
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: "script-src 'self' 'unsafe-inline' 'unsafe-eval';",
+          },
+        ],
+      },
+    ];
+  },
   onDemandEntries: {
     maxInactiveAge: 25 * 1000,
     pagesBufferLength: 2,

@@ -3,15 +3,15 @@
 import { useState, useEffect } from "react";
 import { movementsService, notificationsService, Movement } from "@/lib/movements";
 import { motion } from "framer-motion";
-import { Check, X, Edit, Settings, ChevronLeft, ChevronRight, Package, Type, Calendar, FileSpreadsheet, ArrowLeftRight, ClipboardCheck } from "lucide-react";
+import { Check, X, Edit, Settings, ChevronLeft, ChevronRight, Package, Type, Calendar, FileSpreadsheet, ArrowLeftRight, ClipboardCheck, Lock } from "lucide-react";
 import { isBeerBottleId } from "@/lib/measurementRules";
 
-/** Items por página (2 más que antes en cada breakpoint si caben). */
+/** Items por página: móvil 7; tablet 7; desktop 6. */
 function getItemsPerPage(width: number) {
-  if (width < 400) return 5;
-  if (width < 768) return 6;
+  if (width < 400) return 6;
+  if (width < 768) return 7;
   if (width < 1024) return 7;
-  return 8;
+  return 6;
 }
 
 export default function MovementsPage() {
@@ -52,6 +52,7 @@ export default function MovementsPage() {
       case "portion_change": return <Settings className="w-4 h-4 text-purple-500" />;
       case "inventory_list_updated": return <Package className="w-4 h-4 text-indigo-500" />;
       case "bar_name_change": return <Type className="w-4 h-4 text-slate-600" />;
+      case "employee_password_change": return <Lock className="w-4 h-4 text-amber-600" />;
       case "last_update_date": return <Calendar className="w-4 h-4 text-amber-600" />;
       case "sales_import": return <FileSpreadsheet className="w-4 h-4 text-emerald-600" />;
       case "order_import": return <FileSpreadsheet className="w-4 h-4 text-orange-500" />;
