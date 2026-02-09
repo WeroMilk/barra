@@ -6,7 +6,7 @@ La aplicación está funcionando en **modo DEMO** (sin Firebase configurado). Pu
 
 ### Usuario de Prueba
 - **Email:** `demo@mibarra.com`
-- **Contraseña:** `demo123`
+- **Contraseña:** `MiBarraDemo1!`
 - **Nombre:** Gerente
 
 ### Contraseña de Gerente
