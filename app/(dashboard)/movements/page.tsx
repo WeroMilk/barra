@@ -6,18 +6,23 @@ import { motion } from "framer-motion";
 import { Check, X, Edit, Settings, ChevronLeft, ChevronRight, Package, Type, Calendar, FileSpreadsheet, ArrowLeftRight, ClipboardCheck, Lock } from "lucide-react";
 import { isBeerBottleId } from "@/lib/measurementRules";
 
-/** Items por página: móvil 7; tablet 7; desktop 6. */
-function getItemsPerPage(width: number) {
-  if (width < 400) return 6;
-  if (width < 768) return 7;
-  if (width < 1024) return 7;
-  return 6;
+/** Items por página según ancho y alto (móvil: evita boxes cortados). */
+function getItemsPerPage(width: number, height: number = 800) {
+  if (width >= 1024) return 6;
+  if (width >= 768) return 7;
+  // Móvil: ajustar por altura para que no se corte ningún box
+  if (height < 600) return 5;
+  if (height < 680) return 6;
+  if (height < 760) return 7;
+  return 8;
 }
 
 export default function MovementsPage() {
   const [movements, setMovements] = useState<Movement[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(8);
+  const [itemsPerPage, setItemsPerPage] = useState(() =>
+    typeof window !== "undefined" ? getItemsPerPage(window.innerWidth, window.innerHeight) : 8
+  );
 
   useEffect(() => {
     const all = movementsService.getAll();
@@ -26,10 +31,17 @@ export default function MovementsPage() {
   }, []);
 
   useEffect(() => {
-    const update = () => setItemsPerPage(getItemsPerPage(typeof window !== "undefined" ? window.innerWidth : 1024));
+    const update = () => {
+      if (typeof window === "undefined") return;
+      setItemsPerPage(getItemsPerPage(window.innerWidth, window.innerHeight));
+    };
     update();
     window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
+    window.addEventListener("orientationchange", update);
+    return () => {
+      window.removeEventListener("resize", update);
+      window.removeEventListener("orientationchange", update);
+    };
   }, []);
 
   const totalPages = Math.max(1, Math.ceil(movements.length / itemsPerPage));
@@ -97,7 +109,7 @@ export default function MovementsPage() {
           <p className="text-xs text-apple-text2">Historial de cambios en el inventario</p>
         </div>
 
-        <div className="flex-1 min-h-0 overflow-hidden px-4 pb-1 md:pb-2">
+        <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-4 pb-1 md:pb-2" style={{ WebkitOverflowScrolling: "touch" }}>
           {movements.length === 0 ? (
             <div className="flex flex-col items-center justify-center min-h-[200px] text-center">
               <p className="text-apple-text2 mb-2">No hay movimientos registrados</p>

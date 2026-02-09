@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import PWAInstall from "@/components/PWAInstall";
+import AppHeightSync from "@/components/AppHeightSync";
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -82,6 +83,7 @@ export default function RootLayout({
             `,
           }}
         />
+        <AppHeightSync />
         {children}
         <PWAInstall />
       </body>

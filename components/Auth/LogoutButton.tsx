@@ -8,10 +8,13 @@ import { LogOut } from "lucide-react";
 
 interface LogoutButtonProps {
   className?: string;
+  /** Muestra el texto "Salir" (en desktop por defecto visible) */
   showText?: boolean;
+  /** En menú móvil: forzar que el texto se vea siempre */
+  alwaysShowText?: boolean;
 }
 
-export default function LogoutButton({ className = "", showText = true }: LogoutButtonProps) {
+export default function LogoutButton({ className = "", showText = true, alwaysShowText = false }: LogoutButtonProps) {
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -30,7 +33,11 @@ export default function LogoutButton({ className = "", showText = true }: Logout
       aria-label="Salir"
     >
       <LogOut className="w-4 h-4 shrink-0" />
-      {showText && <span className="text-xs min-[380px]:text-sm font-medium hidden min-[380px]:inline">Salir</span>}
+      {showText && (
+        <span className={`text-xs font-medium ${alwaysShowText ? "inline" : "hidden min-[380px]:inline"} ${alwaysShowText ? "min-[380px]:text-sm" : "min-[380px]:text-sm"}`}>
+          Salir
+        </span>
+      )}
     </button>
   );
 }

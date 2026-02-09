@@ -50,7 +50,7 @@ export default function ReportPage() {
         </p>
       </div>
 
-      <div className="flex-1 min-h-0 overflow-hidden flex flex-col justify-center p-4 gap-3 max-w-lg mx-auto w-full">
+      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden flex flex-col p-4 gap-3 max-w-lg mx-auto w-full" style={{ WebkitOverflowScrolling: "touch" }}>
         {/* Períodos: Hoy, Semana, Mes */}
         <div className="grid grid-cols-3 gap-2 flex-shrink-0">
           <div className="bg-apple-surface rounded-2xl border border-apple-border p-3 text-center">
@@ -82,7 +82,7 @@ export default function ReportPage() {
             <TrendingUp className="w-4 h-4 text-apple-accent flex-shrink-0" />
             <h3 className="font-semibold text-apple-text text-sm">Lo más vendido</h3>
           </div>
-          <div className="flex-1 min-h-0 overflow-hidden p-3">
+          <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-3" style={{ WebkitOverflowScrolling: "touch" }}>
             {stats.topProducts.length === 0 ? (
               <p className="text-xs text-apple-text2 text-center py-4">Importa ventas para ver estadísticas</p>
             ) : (

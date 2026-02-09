@@ -118,7 +118,7 @@ export default function ConfigPage() {
         <p className="text-xs text-apple-text2">Ajustes del bar, contraseñas y pedidos.</p>
       </div>
 
-      <div className="flex-1 min-h-0 overflow-hidden flex flex-col px-2 sm:px-4 py-2 sm:py-3">
+      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden flex flex-col px-2 sm:px-4 py-2 sm:py-3 pb-[max(0.5rem,env(safe-area-inset-bottom,0px))] sm:pb-3" style={{ WebkitOverflowScrolling: "touch" }}>
         <div className="flex-1 min-h-0 min-w-0 flex flex-col gap-2 sm:gap-3 max-w-5xl mx-auto w-full">
           {/* Contraseña de empleado - ocupa la fila superior completa en desktop */}
           <section className="flex flex-col min-h-0 min-w-0 bg-apple-surface rounded-xl sm:rounded-2xl border border-apple-border shadow-sm overflow-hidden">

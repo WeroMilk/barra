@@ -139,8 +139,8 @@ export default function ImportSalesPage() {
   };
 
   return (
-    <div className="h-full overflow-auto">
-      <div className="max-w-lg mx-auto px-4 py-6 space-y-6">
+    <div className="h-full min-h-0 overflow-y-auto overflow-x-hidden" style={{ WebkitOverflowScrolling: "touch" }}>
+      <div className="max-w-lg mx-auto px-4 py-6 pb-[env(safe-area-inset-bottom,0px)] space-y-6">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-xl bg-apple-surface border border-apple-border">
             <FileSpreadsheet className="w-8 h-8 text-apple-accent" />

@@ -13,12 +13,21 @@ import LogoutButton from "@/components/Auth/LogoutButton";
 import BottleCard from "@/components/SelectBottles/BottleCard";
 import { motion } from "framer-motion";
 
-/** Móvil muy pequeño: 6 | Móvil: 10 | Tablet: 10 | Desktop: 10 */
-function getItemsPerPage(width: number) {
-  if (width < 400) return 6;
-  if (width < 768) return 10; // móvil: 10 por pantalla (2 cols × 5 filas)
-  if (width < 1024) return 10; // tablet
-  return 10; // desktop: 10 (5 cols × 2 filas)
+/** Items por pantalla según ancho y alto (móvil: evita boxes cortados). */
+function getItemsPerPage(width: number, height: number = 800) {
+  if (width >= 1024) return 12;
+  if (width >= 768) return 12;
+  // Móvil: ajustar por altura para que quepan todos los boxes sin cortar
+  if (width < 380) {
+    if (height < 600) return 4;
+    if (height < 680) return 6;
+    if (height < 760) return 8;
+    return 10;
+  }
+  if (height < 600) return 6;
+  if (height < 680) return 8;
+  if (height < 760) return 10;
+  return 12;
 }
 
 export default function SelectBottlesPage() {
@@ -26,14 +35,18 @@ export default function SelectBottlesPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(() =>
-    typeof window !== "undefined" ? getItemsPerPage(window.innerWidth) : 10
+    typeof window !== "undefined" ? getItemsPerPage(window.innerWidth, window.innerHeight) : 12
   );
   const router = useRouter();
 
   useEffect(() => {
-    const update = () => setItemsPerPage(getItemsPerPage(window.innerWidth));
+    const update = () => setItemsPerPage(getItemsPerPage(window.innerWidth, window.innerHeight));
     window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
+    window.addEventListener("orientationchange", update);
+    return () => {
+      window.removeEventListener("resize", update);
+      window.removeEventListener("orientationchange", update);
+    };
   }, []);
 
   const toggleBottle = (bottleId: string) => {
@@ -193,7 +206,7 @@ export default function SelectBottlesPage() {
               </div>
             ) : (
               <div className="w-full min-w-0 flex justify-center">
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1 min-[380px]:gap-1.5 sm:gap-2 md:gap-3 lg:gap-4 w-full max-w-5xl min-w-0 [grid-auto-rows:minmax(98px,1fr)] min-[380px]:[grid-auto-rows:minmax(106px,1fr)] sm:[grid-auto-rows:minmax(118px,1fr)] md:[grid-auto-rows:minmax(132px,1fr)] lg:[grid-auto-rows:minmax(148px,1fr)]">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1 min-[380px]:gap-1.5 sm:gap-2 md:gap-3 lg:gap-4 w-full max-w-5xl min-w-0 [grid-auto-rows:minmax(80px,1fr)] min-[380px]:[grid-auto-rows:minmax(88px,1fr)] sm:[grid-auto-rows:minmax(118px,1fr)] md:[grid-auto-rows:minmax(132px,1fr)] lg:[grid-auto-rows:minmax(148px,1fr)]">
                   {paginatedBottles.map((bottle, index) => (
                     <motion.div
                       key={bottle.id}
