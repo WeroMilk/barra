@@ -17,7 +17,7 @@ export function getCategoryColor(category: string): string {
     pisco: "#E8DCC8",
     sidra: "#DEB887",
   };
-  return colors[category.toLowerCase()] || "#6366F1";
+  return colors[category.toLowerCase()] || "#E67E22";
 }
 
 /** Categorías con líquido clarito: la botella (contorno) va en gris; el líquido conserva su color */

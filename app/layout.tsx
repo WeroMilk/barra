@@ -21,12 +21,13 @@ export const viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: "cover",
-  themeColor: "#007AFF",
+  themeColor: "#E67E22",
 };
 
 export const metadata: Metadata = {
   title: "Barra - Gestión de Bar",
   description: "Control de inventario de botellas y cervezas",
+  icons: { icon: "/icon.svg", shortcut: "/icon.svg", apple: "/icon.svg" },
 };
 
 export default function RootLayout({

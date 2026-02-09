@@ -47,12 +47,13 @@ export default function MovementsPage() {
     switch (type) {
       case "inventory_check_ok": return <Check className="w-4 h-4 text-green-600" />;
       case "inventory_check_fail": return <X className="w-4 h-4 text-red-600" />;
-      case "edit": return <Edit className="w-4 h-4 text-blue-500" />;
+      case "edit": return <Edit className="w-4 h-4 text-orange-500" />;
       case "portion_change": return <Settings className="w-4 h-4 text-purple-500" />;
       case "inventory_list_updated": return <Package className="w-4 h-4 text-indigo-500" />;
       case "bar_name_change": return <Type className="w-4 h-4 text-slate-600" />;
       case "last_update_date": return <Calendar className="w-4 h-4 text-amber-600" />;
       case "sales_import": return <FileSpreadsheet className="w-4 h-4 text-emerald-600" />;
+      case "order_import": return <FileSpreadsheet className="w-4 h-4 text-orange-500" />;
       case "bottles_reorder": return <ArrowLeftRight className="w-4 h-4 text-cyan-600" />;
       case "sort_change": return <Settings className="w-4 h-4 text-slate-500" />;
       default: return null;

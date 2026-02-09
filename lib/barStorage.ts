@@ -1,7 +1,7 @@
 import { Bottle } from "./types";
 
 /** Clave de localStorage donde se guarda el inventario seleccionado (Mi Inventario → Mi Barra). */
-export const BAR_BOTTLES_KEY = "mibarra-bar-bottles";
+export const BAR_BOTTLES_KEY = "barra-bar-bottles";
 
 /**
  * Carga las botellas del bar desde localStorage.

@@ -1,19 +1,14 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { FileSpreadsheet, Upload, CheckCircle, AlertCircle } from "lucide-react";
-import {
-  getBarBottles,
-  saveBarBottles,
-  applySalesToInventory,
-  sheetToSalesRows,
-  type SalesRow,
-} from "@/lib/salesImport";
+import { Package, Upload, CheckCircle, AlertCircle, Download } from "lucide-react";
+import { loadBarBottles, saveBarBottles } from "@/lib/barStorage";
+import { applyOrderToInventory, sheetToOrderRows } from "@/lib/orderImport";
 import { setLastInventoryUpdate } from "@/lib/inventoryUpdate";
 import { movementsService } from "@/lib/movements";
 import { demoAuth } from "@/lib/demoAuth";
 
-export default function ImportSalesPage() {
+export default function ImportOrderPage() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
   const [appliedCount, setAppliedCount] = useState(0);
@@ -38,29 +33,23 @@ export default function ImportSalesPage() {
       const sheet = workbook.Sheets[firstSheetName];
       const json: { [key: string]: unknown }[] = XLSX.utils.sheet_to_json(sheet, { defval: "" });
 
-      const sales: SalesRow[] = sheetToSalesRows(json);
-      if (sales.length === 0) {
+      const orderRows = sheetToOrderRows(json);
+      if (orderRows.length === 0) {
         setStatus("success");
-        setMessage("Archivo leído. No se encontraron filas de ventas (revisa que haya columnas tipo 'producto/nombre' y 'cantidad').");
+        setMessage("Archivo leído. No se encontraron filas de pedido (revisa columnas 'producto/nombre' y 'cantidad').");
         return;
       }
 
-      const bottles = getBarBottles();
+      const bottles = loadBarBottles();
       if (bottles.length === 0) {
         setStatus("error");
-        setMessage("No hay inventario cargado. Primero configura las botellas en Mi Barra (Selecciona Tu Inventario).");
+        setMessage("No hay inventario. Configura las botellas en Configuración → Selecciona tu inventario.");
         return;
       }
 
-      // Porción por defecto: 1 oz para licores, 1 unidad para cerveza (MVP)
-      const result = applySalesToInventory({
-        bottles,
-        sales,
-        portionOz: 1,
-        portionUnits: 1,
-      });
-
+      const result = applyOrderToInventory(bottles, orderRows);
       saveBarBottles(result.updatedBottles);
+
       const now = new Date();
       const dateStr = now.toLocaleString("es-ES", {
         day: "2-digit",
@@ -72,18 +61,18 @@ export default function ImportSalesPage() {
       setLastInventoryUpdate(dateStr);
 
       movementsService.add({
-        type: "sales_import",
+        type: "order_import",
         bottleId: "_",
-        bottleName: "Importar ventas",
+        bottleName: "Importar pedido",
         newValue: result.applied.length,
         userName: demoAuth.getCurrentUser()?.name ?? "Usuario",
-        description: `${result.applied.length} ventas aplicadas al inventario`,
+        description: `${result.applied.length} líneas sumadas al inventario`,
       });
 
       setAppliedCount(result.applied.length);
       setUnmatchedCount(result.unmatched.length);
       setDetailRows(
-        result.applied.slice(0, 15).map((a) => `${a.bottleName}: -${a.deducted.toFixed(1)} ${a.unit}`)
+        result.applied.slice(0, 15).map((a) => `${a.bottleName}: +${a.added.toFixed(a.unit === "oz" ? 1 : 0)} ${a.unit}`)
       );
       if (result.unmatched.length > 0) {
         setDetailRows((prev) => [...prev, `Sin match: ${result.unmatched.slice(0, 5).join(", ")}${result.unmatched.length > 5 ? "…" : ""}`]);
@@ -91,7 +80,7 @@ export default function ImportSalesPage() {
 
       setStatus("success");
       setMessage(
-        `Archivo leído. ${result.applied.length} ventas aplicadas al inventario. Base de datos actualizada.`
+        `Pedido aplicado. ${result.applied.length} líneas sumadas al inventario.${result.unmatched.length > 0 ? ` ${result.unmatched.length} productos sin coincidencia.` : ""}`
       );
     } catch (err) {
       setStatus("error");
@@ -110,27 +99,38 @@ export default function ImportSalesPage() {
       <div className="max-w-lg mx-auto px-4 py-6 space-y-6">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-xl bg-apple-surface border border-apple-border">
-            <FileSpreadsheet className="w-8 h-8 text-apple-accent" />
+            <Package className="w-8 h-8 text-apple-accent" />
           </div>
           <div>
-            <h2 className="text-xl font-semibold text-apple-text">Importar informe de ventas</h2>
+            <h2 className="text-xl font-semibold text-apple-text">Importar pedido</h2>
             <p className="text-sm text-apple-text2">
-              Sube el Excel o CSV de ventas para descontar las ventas del inventario.
+              Sube un Excel o CSV con el pedido para sumar todo al inventario de un solo jalón.
             </p>
           </div>
         </div>
 
-        <div className="bg-apple-surface rounded-xl border border-apple-border p-4 space-y-3">
+        <div className="bg-apple-surface rounded-xl border border-apple-border p-4 space-y-4">
           <p className="text-sm text-apple-text2">
-            Flujo: tener inventario en Mi Barra → configurar porción (oz o unidades por cobro) → importar este archivo → revisar cada botella con ✓ o ✗.
+            Descarga la plantilla, complétala con los nombres de tus productos (igual que en el inventario) y la cantidad a sumar. Luego súbela aquí.
+          </p>
+          <a
+            href="/plantilla-pedido.csv"
+            download="plantilla-pedido.csv"
+            className="inline-flex items-center justify-center gap-2 px-4 py-3 bg-apple-accent text-white rounded-xl hover:opacity-90 transition-opacity font-medium text-sm"
+          >
+            <Download className="w-5 h-5 flex-shrink-0" />
+            Descargar plantilla (CSV)
+          </a>
+          <p className="text-xs text-apple-text2">
+            Licores: cantidad en oz. Cerveza: cantidad en unidades. Puedes abrir el CSV en Excel, llenarlo y guardar como .xlsx si prefieres.
           </p>
           <label className="flex flex-col items-center justify-center gap-2 py-6 px-4 border-2 border-dashed border-apple-border rounded-xl hover:bg-apple-bg transition-colors cursor-pointer">
             <Upload className="w-10 h-10 text-apple-text2" />
             <span className="text-sm font-medium text-apple-text">Elegir archivo Excel o CSV</span>
             <span className="text-xs text-apple-text2">.xlsx, .xls o .csv</span>
             <input
-              id="import-sales-file"
-              name="salesFile"
+              id="import-order-file"
+              name="orderFile"
               type="file"
               accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv"
               onChange={onInputChange}
@@ -173,7 +173,7 @@ export default function ImportSalesPage() {
         <div className="bg-orange-50 rounded-xl border border-orange-200 p-4">
           <h3 className="font-semibold text-apple-text text-sm mb-1">Formato del archivo</h3>
           <p className="text-xs text-apple-text">
-            La página detecta columnas que parezcan &quot;producto&quot; o &quot;nombre&quot; y &quot;cantidad&quot; o &quot;vendido&quot;. Si tu archivo tiene otras columnas, puedes dejarlo con columnas estándar (producto, cantidad vendida) y subirlo aquí.
+            La plantilla tiene las columnas <strong>Producto</strong> y <strong>Cantidad</strong>. Escribe el nombre del producto exactamente como aparece en tu inventario (Barra). Para licores usa cantidad en oz; para cerveza, en unidades.
           </p>
         </div>
       </div>

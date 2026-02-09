@@ -7,6 +7,7 @@ export type MovementType =
   | "bar_name_change"
   | "last_update_date"
   | "sales_import"
+  | "order_import"
   | "bottles_reorder"
   | "sort_change";
 
@@ -23,9 +24,9 @@ export interface Movement {
   description?: string;
 }
 
-const UNREAD_KEY = "mibarra-notifications-unread";
+const UNREAD_KEY = "barra-notifications-unread";
 
-const NOTIFICATIONS_UPDATE_EVENT = "mibarra-notifications-update";
+const NOTIFICATIONS_UPDATE_EVENT = "barra-notifications-update";
 
 export const notificationsService = {
   incrementUnread: () => {

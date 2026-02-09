@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { Wine, Bell, Settings, FileSpreadsheet } from "lucide-react";
+import { Wine, Bell, Settings, FileSpreadsheet, Package } from "lucide-react";
 import LogoutButton from "@/components/Auth/LogoutButton";
 import { demoAuth } from "@/lib/demoAuth";
 
@@ -34,13 +34,14 @@ export default function DashboardHeader({ leftContent, notificationsCount = 0 }:
             </p>
           </div>
         </div>
+        {/* Izquierda: Inventario, Movimientos, Importar ventas */}
         <div className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center gap-0.5 sm:gap-1">
           {leftContent}
-          <Link href="/bar" className={`touch-target-min flex items-center justify-center min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 p-1.5 sm:p-1.5 rounded-md ${linkClass("/bar")}`} title="Inventario" aria-label="Inventario">
-            <Wine className="w-4 h-4 sm:w-4 sm:h-4 flex-shrink-0" />
+          <Link href="/bar" className={`touch-target-min flex items-center justify-center min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 p-1.5 rounded-md ${linkClass("/bar")}`} title="Inventario" aria-label="Inventario">
+            <Wine className="w-4 h-4 flex-shrink-0" />
           </Link>
-          <Link href="/movements" className={`touch-target-min relative flex items-center justify-center min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 p-1.5 sm:p-1.5 rounded-md ${linkClass("/movements")}`} title="Movimientos" aria-label="Movimientos">
-            <Bell className="w-4 h-4 sm:w-4 sm:h-4 flex-shrink-0" />
+          <Link href="/movements" className={`touch-target-min relative flex items-center justify-center min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 p-1.5 rounded-md ${linkClass("/movements")}`} title="Movimientos" aria-label="Movimientos">
+            <Bell className="w-4 h-4 flex-shrink-0" />
             {notificationsCount > 0 && (
               <span className="absolute -top-0.5 -right-0.5 min-w-[14px] h-[14px] sm:min-w-[18px] sm:h-[18px] px-0.5 flex items-center justify-center text-[8px] sm:text-[10px] font-bold text-white bg-red-500 rounded-full">
                 {notificationsCount > 99 ? "99+" : notificationsCount}
@@ -50,11 +51,15 @@ export default function DashboardHeader({ leftContent, notificationsCount = 0 }:
           <Link href="/import-sales" className={`touch-target-min flex items-center justify-center min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 p-1.5 rounded-md ${linkClass("/import-sales")}`} title="Importar ventas" aria-label="Importar ventas">
             <FileSpreadsheet className="w-4 h-4 flex-shrink-0" />
           </Link>
+        </div>
+        {/* Derecha (móvil y desktop): Importar pedido, Configuración, Salir */}
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-0.5 sm:gap-1">
+          <Link href="/import-order" className={`touch-target-min flex items-center justify-center min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 p-1.5 rounded-md ${linkClass("/import-order")}`} title="Importar pedido" aria-label="Importar pedido">
+            <Package className="w-4 h-4 flex-shrink-0" />
+          </Link>
           <Link href="/config" className={`touch-target-min flex items-center justify-center min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 p-1.5 rounded-md ${linkClass("/config")}`} title="Configuraciones" aria-label="Configuraciones">
             <Settings className="w-4 h-4 flex-shrink-0" />
           </Link>
-        </div>
-        <div className="absolute right-0 top-1/2 -translate-y-1/2">
           <LogoutButton />
         </div>
       </div>

@@ -6,7 +6,7 @@
   --apple-bg: #F5F5F7;
   --apple-surface: #FFFFFF;
   --apple-text: #1D1D1F;
-  --apple-accent: #007AFF;
+  --apple-accent: #E67E22;
   /* Altura de app en móvil: igual en iOS y Android (iPhone 14 Pro Max = cualquier Android) */
   --app-height: 100dvh;
   --app-height-fallback: 100vh;

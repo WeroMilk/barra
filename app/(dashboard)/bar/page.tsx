@@ -246,7 +246,7 @@ export default function BarPage() {
             <span className="text-[9px] sm:text-[10px] text-apple-text2 truncate">{getSortLabel(sortOption)}</span>
             <button
               onClick={handleSortClick}
-              className="flex items-center gap-1 px-1.5 py-0.5 sm:px-2 sm:py-1 text-[9px] sm:text-[10px] text-apple-text2 bg-apple-bg border border-apple-border rounded-md hover:!bg-blue-600 hover:!text-white hover:!border-blue-600 transition-colors"
+              className="flex items-center gap-1 px-1.5 py-0.5 sm:px-2 sm:py-1 text-[9px] sm:text-[10px] text-apple-text2 bg-apple-bg border border-apple-border rounded-md hover:!bg-apple-accent hover:!text-white hover:!border-apple-accent transition-colors"
               title="Cambiar orden"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="sm:w-2.5 sm:h-2.5">

@@ -5,7 +5,7 @@
 import { Bottle } from "./types";
 import { isMeasuredInUnits } from "./measurementRules";
 
-const BAR_BOTTLES_KEY = "mibarra-bar-bottles";
+const BAR_BOTTLES_KEY = "barra-bar-bottles";
 
 export interface SalesRow {
   /** Nombre del producto (se hace match con bottle.name) */
